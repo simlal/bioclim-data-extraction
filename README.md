@@ -17,7 +17,7 @@ Latest publication :
 [Global climate-related predictors at kilometre resolution for the past and future. (preprint)](https://doi.org/10.5194/essd-2022-212)
 
 Historical data range : 
-"###"
+1981-2010
 
 Data at 1 km<sup>2</sup> resolution for all 19 BIOCLIM vars : 
 
