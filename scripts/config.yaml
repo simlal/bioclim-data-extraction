@@ -1,3 +1,5 @@
 url-files:
-  chelsa: "data/chelsa_bioclim19_S3paths.txt"
-  worldclim: "data/__.txt"
+  chelsa: "../data/chelsa_bioclim19_S3paths.txt"
+  worldclim: "../data/worldclim_bioclim19_30s_path.txt"
+  test: "../data/test.txt"
+download-path: "../data/"
