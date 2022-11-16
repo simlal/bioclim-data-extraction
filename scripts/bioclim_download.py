@@ -72,7 +72,7 @@ if __name__ == "__main__" :
             print("Please enter an exact name :)")
             continue
         else : 
-            print("Starting to download {} dataset(s)".format(to_download))
+            print("Starting to download {} dataset".format(to_download))
             break
 
     # Download all user-wanted files
