@@ -1,22 +1,9 @@
 import yaml
 import requests
 import time
-import sys
-# from tqdm.auto import tqdm
-
-# Load yaml and set vars
-
-with open('config.yaml') as f:
-    config = yaml.safe_load(f)
-
-chelsa_urls = config["url-files"]["chelsa"]
-worldclim_urls = config["url-files"]["worldclim"]
-test_urls = config["url-files"]["test"]
-download_path = config["download-path"]
-
 
 # Download zip files
-def download_single(urlfile, filepath):
+def download_single(urlfile, savepath):
     with open(urlfile) as f:
         urls = [line.rstrip() for line in f]
         for url in urls :
@@ -24,11 +11,11 @@ def download_single(urlfile, filepath):
             response = requests.get(url, stream=True)
             # Check file size
             total_size = float(response.headers['Content-Length'])
-            print("{} is {:.1f} MB\n".format(filename, total_size/1000000))
+            print("{} is {:.1f} MB".format(filename, total_size/1000000))
             # Download in chunks of 1 MB
             if response.status_code == 200 : 
-                print("Server response OK from {}, Downloading {}\n".format('.'.join(url.split("/")[2]), filename))
-                with open(filepath+filename, 'wb') as f :
+                print("Server response OK from {}, starting to download {}".format((url.split("/")[2]), filename))
+                with open(savepath+filename, 'wb') as f :
                     chunksize = 1024 * 10000
                     start_time = time.time()
                     for n, chunk in enumerate(response.iter_content(chunk_size=chunksize)) :
@@ -41,9 +28,20 @@ def download_single(urlfile, filepath):
                             )
                         time.sleep(0.1)
                         f.write(chunk)
+                    print("Done downloading {} in {} !".format(filename, (now_time-start_time)))
             else :
                 print("File {} cannot be downloaded. Status code : {}".format(filename, response.status_code))
-            print("Done downloading !")
-            return filepath+filename
+            return savepath+filename
 
+if __name__ == "__main__" :
+    # Load yaml and set vars
 
+    with open('config.yaml') as f:
+        config = yaml.safe_load(f)
+
+    chelsa_urls = config["url-files"]["chelsa"]
+    worldclim_urls = config["url-files"]["worldclim"]
+    test_urls = config["url-files"]["test"]
+    download_path = config["download-path"]
+
+    download_single(test_urls, download_path)
