@@ -16,7 +16,7 @@ download_path = config["download-path"]
 
 
 # Download zip files
-def download_zip(urlfile, filepath):
+def download_single(urlfile, filepath):
     with open(urlfile) as f:
         urls = [line.rstrip() for line in f]
         for url in urls :
@@ -24,23 +24,26 @@ def download_zip(urlfile, filepath):
             response = requests.get(url, stream=True)
             # Check file size
             total_size = float(response.headers['Content-Length'])
-            print("{} is {:.1f} MB".format(filename, total_size/1000000))
+            print("{} is {:.1f} MB\n".format(filename, total_size/1000000))
             # Download in chunks of 1 MB
             if response.status_code == 200 : 
-                print("Server response OK from {}, Downloading {}".format(''.join(url.split(".")[:3]), filename))
-                with open(filename, 'wb') as f :
-                    chunksize = 1024 * 1000
+                print("Server response OK from {}, Downloading {}\n".format('.'.join(url.split("/")[2]), filename))
+                with open(filepath+filename, 'wb') as f :
+                    chunksize = 1024 * 10000
+                    start_time = time.time()
                     for n, chunk in enumerate(response.iter_content(chunk_size=chunksize)) :
-                        percent = (n * chunksize / total_size) * 100 
-                        sys.stdout.write("\r{:.2f} % of {:.1f} MB  downloaded".format(percent, total_size/1000000))
+                        percent = (n * chunksize / total_size) * 100
+                        now_time = time.time()
+                        current_speed = (n * chunksize) / (now_time - start_time) / 1000000
+                        print(
+                            "{} #_progress_# : {:.2f} % completed of {:.1f} MB downloaded [ current speed of  {:.1f} MB/s ]"
+                            .format(filename, percent, total_size/1000000, current_speed), end="\r"
+                            )
                         time.sleep(0.1)
-                        sys.stdout.flush()
                         f.write(chunk)
             else :
                 print("File {} cannot be downloaded. Status code : {}".format(filename, response.status_code))
-            
+            print("Done downloading !")
             return filepath+filename
 
-download_zip(test_urls, download_path)
 
-# Multiprocessing/parralel download
