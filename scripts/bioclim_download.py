@@ -14,7 +14,7 @@ def download_single(url, savepath):
     filename = url.split("/")[-1]
     try :
         response = requests.get(url, stream=True)
-        print("\n####   Trying get request to download...   ####")
+        print("\n####   Trying get request...   ####")
         # Calc file size in MB
         total_size = (float(response.headers['Content-Length']))/1000000
         print("{} is {:.1f} MB".format(filename, total_size))
@@ -72,7 +72,7 @@ if __name__ == "__main__" :
             print("Please enter an exact name :)")
             continue
         else : 
-            print("Starting to download {} dataset".format(to_download))
+            print("Initiating download of {} dataset...".format(to_download))
             break
 
     # Download all user-wanted files
