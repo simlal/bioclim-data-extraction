@@ -3,3 +3,4 @@ scripts/test.ipynb
 scripts/test.py
 *.tif
 *.zip
+scripts/__pycache__
