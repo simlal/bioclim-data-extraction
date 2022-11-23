@@ -1,4 +1,5 @@
 data/test.txt
 scripts/test.ipynb
+scripts/test.py
 *.tif
 *.zip
