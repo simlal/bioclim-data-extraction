@@ -1,11 +1,11 @@
-from rasterio.plot import show
+import rasterio
+from rasterio import sample
 from rasterio.crs import CRS
 import pyproj
 from pyproj import Transformer
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-
 
 EPSG_codes = [int(code) for code in pyproj.get_codes('EPSG', 'CRS')]
 
@@ -58,20 +58,20 @@ class CrsDataPoint :
             x,y values in tuple format
 
         >>> from data_extraction import CrsDataPoint
-        >>> coord = CrsDataPoint('c1',3005,4760950.613410814,1516444.4032389917)
+        >>> coord = CrsDataPoint('montreal', 4326, 45.508888, -73.561668)
         >>> print(coord)
-        id : c1
-        EPSG : 3005
+        id : montreal
+        EPSG : 4326
         Map coordinates :
-            x = 4760950.613410814
-            y = 1516444.4032389917
+            x = 45.508888
+            y = -73.561668
         ###########################
         """
         self.id = id
         self.epsg = epsg
         self.x = x
         self.y = y
-        self.coord = (self.x,self.y)
+        self.coord = (self.x, self.y)
 
     @property
     def epsg(self) :
@@ -97,7 +97,7 @@ class CrsDataPoint :
             )
 
     
-    def transform_GPS(self,epsg_out=4326) :
+    def transform_GPS(self, epsg_out=4326) :
         """
         Transforms the coordinates to the desired EPSG coordinate reference system. 
         
@@ -119,7 +119,7 @@ class CrsDataPoint :
 
 
         >>> from data_extraction import CrsDataPoint
-        >>> coord = CrsDataPoint('c1',3005,4760950.613410814,1516444.4032389917)
+        >>> coord = CrsDataPoint('c1', 3005, 4760950.613410814, 1516444.4032389917)
         >>> print(coord)
         id : c1
         EPSG : 3005
@@ -155,14 +155,14 @@ class CrsDataPoint :
         Dictionnary of CrsDataPoint objects
 
         >>> df = pd.DataFrame({
-        ... 'id' : ['specimen1', 'specimen2'],
+        ... 'id' : ['montreal', 'paris'],
         ... 'epsg' : [4326,3005],
-        ... 'x' : [44.2, 50],
-        ... 'y' : [32, -73],
+        ... 'x' : [45.508888, 48.864716],
+        ... 'y' : [-73.561668, 2.349014],
         ... })
         >>> crs_data_points = CrsDataPoint.df_to_dict(df)
         >>> print(crs_data_points)
-        {'specimen1': <data_extraction.CrsDataPoint object at 0x7f561ab6a310>, 'specimen2': <data_extraction.CrsDataPoint object at 0x7f561ab68a90>}
+        {'montreal': <data_extraction.CrsDataPoint object at 0x7f561ab6a310>, 'paris': <data_extraction.CrsDataPoint object at 0x7f561ab68a90>}
         >>> print(crs_data_points['specimen1'])
         id : specimen1
         EPSG : 4326
@@ -177,4 +177,9 @@ class CrsDataPoint :
             crs_data_points[row['id']] = CrsDataPoint(row['id'], row['epsg'], row['x'], row['y'])
         return crs_data_points
 
-    
+coord = CrsDataPoint()
+
+with rasterio.open('./data/CHELSA_bio2_1981-2010_V.2.1.tif') as dat:
+    vals = list(rasterio.sample.sample_gen(dat, coords))
+    for (lon,lat), val in zip(coords, vals):
+        print(lon,lat,val[0])
