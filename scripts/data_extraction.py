@@ -142,32 +142,39 @@ class CrsDataPoint :
         # return (x_out, y_out)
         return CrsDataPoint(self.id+"_transformed", epsg_out, x_out, y_out)
 
-    # def df_to_dict(self, df)
-    """
-    Takes the input df and returns a dictionnary of CrsDataPoint objects
+    def df_to_dict(dataframe) :
+        """
+        Takes the input df and returns a dictionnary of CrsDataPoint objects
 
-    Parameters
-    ----------
-    df : dataframe
+        Parameters
+        ----------
+        df : dataframe
 
-    Returns
-    -------
-    Dictionnary of CrsDataPoint objects
+        Returns
+        -------
+        Dictionnary of CrsDataPoint objects
 
-    """
+        >>> df = pd.DataFrame({
+        ... 'id' : ['specimen1', 'specimen2'],
+        ... 'epsg' : [4326,3005],
+        ... 'x' : [44.2, 50],
+        ... 'y' : [32, -73],
+        ... })
+        >>> crs_data_points = CrsDataPoint.df_to_dict(df)
+        >>> print(crs_data_points)
+        {'specimen1': <data_extraction.CrsDataPoint object at 0x7f561ab6a310>, 'specimen2': <data_extraction.CrsDataPoint object at 0x7f561ab68a90>}
+        >>> print(crs_data_points['specimen1'])
+        id : specimen1
+        EPSG : 4326
+        Map coordinates :
+            x = 44.2
+            y = 32
+        ###########################
 
-
-#* To implement in df_to_dict()
-# df = pd.DataFrame({
-#     'id' : ['specimen1', 'specimen2'],
-#     'epsg' : [4326,3005],
-#     'x' : [44.2, 50],
-#     'y' : [32, -73],
-#     })
-# # print(df)
-
-# test_dict = {}
-# for ind,row in df.iterrows():
-#     test_dict[row['id']] = CrsDataPoint(row['id'], row['epsg'], row['x'], row['y'])
+        """
+        crs_data_points = {}
+        for index, row in dataframe.iterrows() :
+            crs_data_points[row['id']] = CrsDataPoint(row['id'], row['epsg'], row['x'], row['y'])
+        return crs_data_points
 
     
