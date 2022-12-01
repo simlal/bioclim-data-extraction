@@ -71,7 +71,7 @@ class CrsDataPoint :
         self.epsg = epsg
         self.x = x
         self.y = y
-        self.xy_pt = [(self.x, self.y)]
+        self.xy_pt = (self.x, self.y)
 
     @property
     def epsg(self) :
@@ -177,16 +177,22 @@ class CrsDataPoint :
             crs_data_points[row['id']] = CrsDataPoint(row['id'], row['epsg'], row['x'], row['y'])
         return crs_data_points
 
+    def single_point_extraction():
+        """
+        
+        """
+
+
 mont = CrsDataPoint('montreal', 4326, 45.508888, -73.561668)
 with rasterio.open('./data/CHELSA_bio2_1981-2010_V.2.1.tif') as dat:
-    val = rasterio.sample.sample_gen(dat, mont.xy_pt)
+    val = rasterio.sample.sample_gen(dat, [mont.xy_pt])
     # val = generator of data extracted at given xy_coord
     
     test_dict = {}
-    for (x,y),v in zip(mont.xy_pt, val):
-        print(x,y, v[0])
+    for (x,y),v in zip([mont.xy_pt], val):
+        # print(x,y, v[0])
         test_dict = {'id' : mont.id, 'epsg' : mont.epsg, 'x' : x, 'y' : y, 'val' : v[0]}
-    print(test_dict) 
+    # print(test_dict) 
     
 
 df = pd.DataFrame({
@@ -198,11 +204,15 @@ df = pd.DataFrame({
 crs_data_points = CrsDataPoint.df_to_dict(df)
 
 with rasterio.open('./data/CHELSA_bio2_1981-2010_V.2.1.tif') as dat:
-    val = rasterio.sample.sample_gen(dat, mont.xy_pt)
-    # val = generator of data extracted at given xy_coord
-    
-    test_dict = {}
-    for (x,y),v in zip(mont.xy_pt, val):
-        print(x,y, v[0])
-        test_dict = {'id' : mont.id, 'epsg' : mont.epsg, 'x' : x, 'y' : y, 'val' : v[0]}
-    print(test_dict) 
+    xy_pts = [v.xy_pt for k,v in crs_data_points.items()]
+    clim_dat = rasterio.sample.sample_gen(dat, xy_pts)
+
+    df_test = pd.DataFrame(columns = ['id', 'epsg', 'x', 'y', '(xy)', 'clim'])
+
+    for i,(xy,clim) in enumerate(zip(xy_pts, clim_dat)):
+        df_test.loc[i] = [
+            (list(crs_data_points.values())[i]).id,
+            (list(crs_data_points.values())[i]).epsg,
+            xy[0], xy[1], xy, clim[0]
+            ]
+    print(df_test)
