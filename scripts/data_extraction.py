@@ -26,7 +26,7 @@ class CrsDataPoint :
         x-value (equivalent of East-West latitude lines) of the CRS
     y : float
         y-value (equivalent of North-Sound longitude lines) of the CRS
-    coord : tuple
+    coord_xy : tuple
         x,y in tuple format
 
     Methods
@@ -54,7 +54,7 @@ class CrsDataPoint :
             x-value (equivalent of East-West latitude lines) of the CRS
         y : float
             y-value (equivalent of North-Sound longitude lines) of the CRS
-        coord : tuple
+        xy_pt : tuple
             x,y values in tuple format
 
         >>> from data_extraction import CrsDataPoint
@@ -71,7 +71,7 @@ class CrsDataPoint :
         self.epsg = epsg
         self.x = x
         self.y = y
-        self.coord = (self.x, self.y)
+        self.xy_pt = [(self.x, self.y)]
 
     @property
     def epsg(self) :
@@ -163,12 +163,12 @@ class CrsDataPoint :
         >>> crs_data_points = CrsDataPoint.df_to_dict(df)
         >>> print(crs_data_points)
         {'montreal': <data_extraction.CrsDataPoint object at 0x7f561ab6a310>, 'paris': <data_extraction.CrsDataPoint object at 0x7f561ab68a90>}
-        >>> print(crs_data_points['specimen1'])
-        id : specimen1
+        >>> print(crs_data_points['montreal'])
+        id : montreal
         EPSG : 4326
         Map coordinates :
-            x = 44.2
-            y = 32
+            x = 45.508888
+            y = -73.561668
         ###########################
 
         """
@@ -177,9 +177,32 @@ class CrsDataPoint :
             crs_data_points[row['id']] = CrsDataPoint(row['id'], row['epsg'], row['x'], row['y'])
         return crs_data_points
 
-coord = CrsDataPoint()
+mont = CrsDataPoint('montreal', 4326, 45.508888, -73.561668)
+with rasterio.open('./data/CHELSA_bio2_1981-2010_V.2.1.tif') as dat:
+    val = rasterio.sample.sample_gen(dat, mont.xy_pt)
+    # val = generator of data extracted at given xy_coord
+    
+    test_dict = {}
+    for (x,y),v in zip(mont.xy_pt, val):
+        print(x,y, v[0])
+        test_dict = {'id' : mont.id, 'epsg' : mont.epsg, 'x' : x, 'y' : y, 'val' : v[0]}
+    print(test_dict) 
+    
+
+df = pd.DataFrame({
+    'id' : ['montreal', 'paris'],
+    'epsg' : [4326,3005],
+    'x' : [45.508888, 48.864716],
+    'y' : [-73.561668, 2.349014],
+        })
+crs_data_points = CrsDataPoint.df_to_dict(df)
 
 with rasterio.open('./data/CHELSA_bio2_1981-2010_V.2.1.tif') as dat:
-    vals = list(rasterio.sample.sample_gen(dat, coords))
-    for (lon,lat), val in zip(coords, vals):
-        print(lon,lat,val[0])
+    val = rasterio.sample.sample_gen(dat, mont.xy_pt)
+    # val = generator of data extracted at given xy_coord
+    
+    test_dict = {}
+    for (x,y),v in zip(mont.xy_pt, val):
+        print(x,y, v[0])
+        test_dict = {'id' : mont.id, 'epsg' : mont.epsg, 'x' : x, 'y' : y, 'val' : v[0]}
+    print(test_dict) 
