@@ -58,7 +58,7 @@ class CrsDataPoint :
             x,y values in tuple format
 
         >>> from data_extraction import CrsDataPoint
-        >>> sherby = CrsDataPoint('Sherbrooke', 4326, -71.890068, 45.393869)
+        >>> sherby = CrsDataPoint('Sherbrooke', epsg=4326, x=-71.890068, y=45.393869)
         >>> print(sherby)
         id : Sherbrooke
         EPSG : 4326
@@ -66,7 +66,7 @@ class CrsDataPoint :
             x = -71.890068
             y = 45.393869
             (x,y) = (-71.890068, 45.393869)
-        ###########################
+        
         """
         self.id = id
         self.epsg = epsg
@@ -91,7 +91,7 @@ class CrsDataPoint :
         Prints the CrsDataPoint object information. 
         """
         return(
-            'id : {}\nEPSG : {}\nMap coordinates :\n\tx = {}\n\ty = {}\n\t(x,y) = {}\n###########################'
+            'id : {}\nEPSG : {}\nMap coordinates :\n\tx = {}\n\ty = {}\n\t(x,y) = {}\n'
             .format(self.id, self.epsg, self.x, self.y, self.xy_pt)
             )
 
@@ -115,10 +115,18 @@ class CrsDataPoint :
         y_out : float
             latitude (y-value, East-West lines) that range between -90 and +90 degrees.
 
-
+        >>> sherby = CrsDataPoint('Sherbrooke', epsg=3857, x=-8002765.769038227, y=5683742.6823244635)
+        >>> sherby_gps = sherby.transform_GPS()
+        >>> print(sherby_gps)
+        id : Sherbrooke_transformed
+        EPSG : 4326
+        Map coordinates :
+            x = -71.89006805555556
+            y = 45.39386888888889
+            (x,y) = (-71.89006805555556, 45.39386888888889)
 
         """
-        transformer = Transformer.from_crs(self.epsg, CRS.from_epsg(epsg_out))
+        transformer = Transformer.from_crs(self.epsg, CRS.from_epsg(epsg_out), always_xy=True)
         x_out, y_out = transformer.transform(self.x, self.y)
         return CrsDataPoint(self.id+"_transformed", epsg_out, x_out, y_out)
 
@@ -135,7 +143,21 @@ class CrsDataPoint :
         -------
         Dictionnary of CrsDataPoint objects
 
-        
+        >>> df = pd.DataFrame({
+        ...     'id' : ['Sherbrooke', 'Paris'],
+        ...     'epsg' : [3857, 4326],
+        ...     'x' : [-8002765.769038227, 2.346963],
+        ...     'y' : [5683742.6823244635, 48.858885],
+        ...         })
+        >>> cities = CrsDataPoint.df_to_dict(df)
+        Dataframe contains data with CRS other than EPSG:4326. Calling transform_GPS()...
+        >>> print(cities['Sherbrooke'])
+        id : Sherbrooke_transformed
+        EPSG : 4326
+        Map coordinates :
+            x = -71.89006805555556
+            y = 45.39386888888889
+            (x,y) = (-71.89006805555556, 45.39386888888889)
 
         """
         crs_data_points = {}
