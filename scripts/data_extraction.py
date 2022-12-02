@@ -88,9 +88,7 @@ class CrsDataPoint :
     
     def __str__(self) :
         """
-        Prints the CrsDataPoint object information.
-
-        >>> 
+        Prints the CrsDataPoint object information. 
         """
         return(
             'id : {}\nEPSG : {}\nMap coordinates :\n\tx = {}\n\ty = {}\n\t(x,y) = {}\n###########################'
@@ -113,7 +111,7 @@ class CrsDataPoint :
         CrsDataPoint object with updated x-y values for the given EPSG code. 
         With default arg it will output the following x/y values :
         x_out : float
-            longitude (x-value, North-South lines) that range between -90 and +90 degrees.
+            longitude (x-value, North-South lines) that range between -180 and +180 degrees.
         y_out : float
             latitude (y-value, East-West lines) that range between -90 and +90 degrees.
 
