@@ -7,8 +7,22 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+# List of all EPSG reference codes
 EPSG_codes = [int(code) for code in pyproj.get_codes('EPSG', 'CRS')]
 
+# Aggregation of data from https://chelsa-climate.org/bioclim/ + filename ref
+chels_dat = {
+    'bio1' : {'name' : "bio1", 'unit' : "C", 'scale' : 0.1, 'offset' : -273.15, 'filename' : "CHELSA_bio1_1981-2010_V.2.1.tif"}
+}
+#? Probably not the best way to go
+chelsa_data = {
+    'name' : ['bio1', 'bio2', 'bio19'],
+    'unit' : ['°C', '°C', 'kg/m' ],
+    'scale' : [0.1, 0.1, 0.1],
+    'offset' : [-273.15, 0, 0],
+    'filename' : ['CHELSA_bio1_1981-2010_V.2.1.tif', 'CHELSA_bio2_1981-2010_V.2.1.tif', 'CHELSA_bio19_1981-2010_V.2.1.tif']
+}
+data_path = './data/'
 
 class CrsDataPoint :
     """
@@ -91,7 +105,7 @@ class CrsDataPoint :
         Prints the CrsDataPoint object information. 
         """
         return(
-            'id : {}\nEPSG : {}\nMap coordinates :\n\tx = {}\n\ty = {}\n\t(x,y) = {}\n'
+            "id : {}\nEPSG : {}\nMap coordinates :\n\tx = {}\n\ty = {}\n\t(x,y) = {}\n"
             .format(self.id, self.epsg, self.x, self.y, self.xy_pt)
             )
 
@@ -175,4 +189,26 @@ class CrsDataPoint :
             for index, row in df.iterrows() :
                 crs_data_points[row['id']] = CrsDataPoint(row['id'], row['epsg'], row['x'], row['y'])
             return crs_data_points
+
+    def single_point_extraction(self, clim_file):
+        """
+        Extracts the pixel values from the specified GeoTIFF file. Calls transform_GPS if needed. 
+        #? To transform pixel value to unit data
+
+        Parameters
+        ----------
+        bioclim_file : .tiff
+
+        Returns
+        -------
+        A dictionnary containing sample id, lon(x), lat(y), bioclim pixel value
+
+        >>> Example
+        """
+        with rasterio.open(clim_file) as tiff :
+            
+            single_pt_dict = {}
+            for (x, y), v in zip([self.xy_pt], val) :
+                single_pt_dict = {'id' : self.id, 'epsg' : self.epsg, 'lon' : x, 'lat' : y, }
+                #! Incomplete commit
 
