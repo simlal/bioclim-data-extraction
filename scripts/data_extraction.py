@@ -58,13 +58,14 @@ class CrsDataPoint :
             x,y values in tuple format
 
         >>> from data_extraction import CrsDataPoint
-        >>> coord = CrsDataPoint('montreal', 4326, 45.508888, -73.561668)
-        >>> print(coord)
-        id : montreal
+        >>> sherby = CrsDataPoint('Sherbrooke', 4326, -71.890068, 45.393869)
+        >>> print(sherby)
+        id : Sherbrooke
         EPSG : 4326
         Map coordinates :
-            x = 45.508888
-            y = -73.561668
+            x = -71.890068
+            y = 45.393869
+            (x,y) = (-71.890068, 45.393869)
         ###########################
         """
         self.id = id
@@ -92,8 +93,8 @@ class CrsDataPoint :
         >>> 
         """
         return(
-            'id : {}\nEPSG : {}\nMap coordinates :\n\tx = {}\n\ty = {}\n\t(x,y) = \n###########################'
-            .format(self.id, self.epsg, self.x, self.y)
+            'id : {}\nEPSG : {}\nMap coordinates :\n\tx = {}\n\ty = {}\n\t(x,y) = {}\n###########################'
+            .format(self.id, self.epsg, self.x, self.y, self.xy_pt)
             )
 
     
