@@ -138,6 +138,8 @@ class CrsDataPoint :
         Parameters
         ----------
         df : dataframe
+            Input dataframe with the following structure : 
+            {'id' : specimen name(any) , 'epsg' : code(int), 'x' : x-value(float), 'y' : y-value(float)}
 
         Returns
         -------
@@ -174,7 +176,3 @@ class CrsDataPoint :
                 crs_data_points[row['id']] = CrsDataPoint(row['id'], row['epsg'], row['x'], row['y'])
             return crs_data_points
 
-    def single_point_extraction():
-        """
-        
-        """
