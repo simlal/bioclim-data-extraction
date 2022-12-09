@@ -7,6 +7,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+# List of all EPSG reference codes
+EPSG_codes = [int(code) for code in pyproj.get_codes('EPSG', 'CRS')]
+
 # Aggregation of data from https://chelsa-climate.org/bioclim/ + filename ref
 chels_dat = {
     'bio1' : {'name' : "bio1", 'unit' : "C", 'scale' : 0.1, 'offset' : -273.15, 'filename' : "CHELSA_bio1_1981-2010_V.2.1.tif"}
@@ -83,12 +86,12 @@ class CrsDataPoint :
         self.x = x
         self.y = y
         self.xy_pt = (self.x, self.y)
-        # List of all EPSG reference codes
-        EPSG_codes = [int(code) for code in pyproj.get_codes('EPSG', 'CRS')]
 
     @property
     def epsg(self) :
         return self._epsg
+    def x(self) : 
+        return self._x
 
     @epsg.setter
     def epsg(self, value):
@@ -96,6 +99,8 @@ class CrsDataPoint :
             raise ValueError("Not a valid EPSG code. Use int associated with EPSG codes")   
         else :
             self._epsg = value
+    def x(self, value) :
+        if 
 
     
     def __str__(self) :
