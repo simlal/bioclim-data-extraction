@@ -90,8 +90,12 @@ class CrsDataPoint :
     @property
     def epsg(self) :
         return self._epsg
+    @property
     def x(self) : 
         return self._x
+    @property
+    def y(self) : 
+        return self._y
 
     @epsg.setter
     def epsg(self, value):
@@ -99,8 +103,18 @@ class CrsDataPoint :
             raise ValueError("Not a valid EPSG code. Use int associated with EPSG codes")   
         else :
             self._epsg = value
+    @x.setter
     def x(self, value) :
-        if 
+        if not isinstance(value, float):
+            raise TypeError("x value must be a float")
+        else : 
+            self._x = value
+    @y.setter
+    def y(self, value) :
+        if not isinstance(value, float):
+            raise TypeError("y value must be a float") 
+        else : 
+            self._y = value 
 
     
     def __str__(self) :
