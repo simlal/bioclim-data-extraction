@@ -23,6 +23,8 @@ chelsa_data = {
     'filename' : ['CHELSA_bio1_1981-2010_V.2.1.tif', 'CHELSA_bio2_1981-2010_V.2.1.tif', 'CHELSA_bio19_1981-2010_V.2.1.tif']
 }
 
+#TODO ADD YAML CONFIG AND STORE THE DATASETS INFO
+
 class CrsDataPoint :
     """
     A class to represent, transform and extract information of a data point under a geographic coordinate system standard (CRS) 
@@ -239,6 +241,7 @@ class CrsDataPoint :
             print("Extracting values for {} variables".format(clim_file_list))
             # clim_file_list = #TODO YAMLREF
 
+        #TODO ADD FOR TO LOOP THROUGH THE LIST OF CLIM_FILE_LIST
         if self.epsg == 4326 :  # Checking for EPSG:4326
             for f in clim_file_list :
                 with rasterio.open(clim_file) as tiff :
