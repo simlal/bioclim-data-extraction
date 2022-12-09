@@ -190,14 +190,21 @@ class CrsDataPoint :
                 crs_data_points[row['id']] = CrsDataPoint(row['id'], row['epsg'], row['x'], row['y'])
             return crs_data_points
 
-    def single_point_extraction(self, clim_file):
+    def single_point_extraction(self, clim_file, unit, scale, offset):
         """
         Extracts the pixel values from the specified GeoTIFF file. Calls transform_GPS if needed. 
-        #? To transform pixel value to unit data
+        
 
         Parameters
         ----------
-        bioclim_file : .tiff
+        clim_file : .tiff
+            GeoTIFF raster file for the wanted climate data variable
+        unit : string
+            Unit name of the corresponding climate variable
+        scale : float
+            The correction to factor to apply (multiply) to the raw pixel value sampled
+        offset : float
+            The correction factor to apply (addition) to the raw pixel value sampled
 
         Returns
         -------
@@ -205,10 +212,25 @@ class CrsDataPoint :
 
         >>> Example
         """
-        with rasterio.open(clim_file) as tiff :
+        # Checking for EPSG:4326
+        if self.epsg == 4326 :
+            with rasterio.open(clim_file) as tiff :
+                val = rasterio.sample.sample_gen(tiff, [self.xy_pt])    # Extracting pixel value
+                single_pt_dict = {}
+                # Saving corrected pixel value
+                for (x, y), v in zip([self.xy_pt], val) :
+                    single_pt_dict = {'id' : self.id, 'epsg' : self.epsg, 'lon' : x, 'lat' : y, unit : v[0]*scale+offset}
+            return single_pt_dict
+        else :
+            print("Data point with x,y not other than EPSG:4326. Calling transform_GPS()...")
+            transformed = self.transform_GPS()                    
+            with rasterio.open(clim_file) as tiff :
+                val = rasterio.sample.sample_gen(tiff, [transformed.xy_pt])
+                single_pt_dict = {}
+                for (x, y), v in zip([transformed.xy_pt], val) :
+                    single_pt_dict = {'id' : transformed.id, 'epsg' : transformed.epsg, 'lon' : x, 'lat' : y, unit : v[0]*scale+offset}
+            return single_pt_dict
+
             
-            single_pt_dict = {}
-            for (x, y), v in zip([self.xy_pt], val) :
-                single_pt_dict = {'id' : self.id, 'epsg' : self.epsg, 'lon' : x, 'lat' : y, }
-                #! Incomplete commit
+
 
