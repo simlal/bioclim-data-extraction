@@ -7,9 +7,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-# List of all EPSG reference codes
-EPSG_codes = [int(code) for code in pyproj.get_codes('EPSG', 'CRS')]
-
 # Aggregation of data from https://chelsa-climate.org/bioclim/ + filename ref
 chels_dat = {
     'bio1' : {'name' : "bio1", 'unit' : "C", 'scale' : 0.1, 'offset' : -273.15, 'filename' : "CHELSA_bio1_1981-2010_V.2.1.tif"}
@@ -86,7 +83,8 @@ class CrsDataPoint :
         self.x = x
         self.y = y
         self.xy_pt = (self.x, self.y)
-        
+        # List of all EPSG reference codes
+        EPSG_codes = [int(code) for code in pyproj.get_codes('EPSG', 'CRS')]
 
     @property
     def epsg(self) :
@@ -212,6 +210,16 @@ class CrsDataPoint :
 
         >>> Example
         """
+        if clim_file_list == "all_worldclim" :
+            print("Extracting values for all variables bio1 to bio19 + elevation from WorldClim 2.1 dataset...")
+            # clim_file_list = #TODO YAMLREF
+        elif clim_file_list == "all_chelsa" :
+            print("Extracting values for all variables bio1 to bio19 from CHELSA V2.1 dataset + elevation from WorldClim 2.1 dataset...")
+            # clim_file_list = #TODO YAMLREF
+        else :
+            print("Extracting values for {} variables")
+            # clim_file_list = #TODO YAMLREF
+
         # Checking for EPSG:4326
         if self.epsg == 4326 :
             for f in clim_file_list :
