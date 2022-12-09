@@ -1,6 +1,6 @@
 data/test.txt
 scripts/test.ipynb
-scripts/test.py
+test.py
 *.tif
 *.zip
 scripts/__pycache__
