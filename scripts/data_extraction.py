@@ -22,7 +22,6 @@ chelsa_data = {
     'offset' : [-273.15, 0, 0],
     'filename' : ['CHELSA_bio1_1981-2010_V.2.1.tif', 'CHELSA_bio2_1981-2010_V.2.1.tif', 'CHELSA_bio19_1981-2010_V.2.1.tif']
 }
-data_path = './data/'
 
 class CrsDataPoint :
     """
@@ -87,6 +86,7 @@ class CrsDataPoint :
         self.x = x
         self.y = y
         self.xy_pt = (self.x, self.y)
+        
 
     @property
     def epsg(self) :
@@ -190,7 +190,7 @@ class CrsDataPoint :
                 crs_data_points[row['id']] = CrsDataPoint(row['id'], row['epsg'], row['x'], row['y'])
             return crs_data_points
 
-    def single_point_extraction(self, clim_file, unit, scale, offset):
+    def single_point_extraction(self, clim_file_list, unit, scale, offset):
         """
         Extracts the pixel values from the specified GeoTIFF file. Calls transform_GPS if needed. 
         
@@ -208,19 +208,21 @@ class CrsDataPoint :
 
         Returns
         -------
-        A dictionnary containing sample id, lon(x), lat(y), bioclim pixel value
+        A dictionnary containing sample id, lon(x), lat(y), corrected climate pixel value
 
         >>> Example
         """
         # Checking for EPSG:4326
         if self.epsg == 4326 :
-            with rasterio.open(clim_file) as tiff :
-                val = rasterio.sample.sample_gen(tiff, [self.xy_pt])    # Extracting pixel value
-                single_pt_dict = {}
-                # Saving corrected pixel value
-                for (x, y), v in zip([self.xy_pt], val) :
-                    single_pt_dict = {'id' : self.id, 'epsg' : self.epsg, 'lon' : x, 'lat' : y, unit : v[0]*scale+offset}
-            return single_pt_dict
+            for f in clim_file_list :
+                with rasterio.open(clim_file) as tiff :
+                    val = rasterio.sample.sample_gen(tiff, [self.xy_pt])    # Extracting pixel value
+                    single_pt_dict = {}
+                    # Saving corrected pixel value
+                    for (x, y), v in zip([self.xy_pt], val) :
+                        single_pt_dict = {'id' : self.id, 'epsg' : self.epsg, 'lon' : x, 'lat' : y, unit : v[0]*scale+offset}
+                        print("x : {} y : {} v : {}".format(x,y,v))
+                return single_pt_dict
         else :
             print("Data point with x,y not other than EPSG:4326. Calling transform_GPS()...")
             transformed = self.transform_GPS()                    
@@ -231,6 +233,18 @@ class CrsDataPoint :
                     single_pt_dict = {'id' : transformed.id, 'epsg' : transformed.epsg, 'lon' : x, 'lat' : y, unit : v[0]*scale+offset}
             return single_pt_dict
 
-            
+    def get_climate():
+        """
+        A method to extract the corrected value for the wanted raster dataset. Will output multiple climate variables on demand.
+
+        Parameters
+        ----------
+        ? : ?
+
+        Returns
+        -------
+        A dataframe with the sample id, lon(x) (in EPSG:4326), lat(y) (in EPSG:4326) and the corrected value extracted climatic data.
+        Multiple or all climatic values can be returned in the same dataframe if desired.
+        """        
 
 
