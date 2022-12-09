@@ -217,7 +217,7 @@ class CrsDataPoint :
             print("Extracting values for all variables bio1 to bio19 from CHELSA V2.1 dataset + elevation from WorldClim 2.1 dataset...")
             # clim_file_list = #TODO YAMLREF
         else :
-            print("Extracting values for {} variables")
+            print("Extracting values for {} variables".format(clim_file_list))
             # clim_file_list = #TODO YAMLREF
 
         # Checking for EPSG:4326
