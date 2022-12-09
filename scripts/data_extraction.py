@@ -239,8 +239,7 @@ class CrsDataPoint :
             print("Extracting values for {} variables".format(clim_file_list))
             # clim_file_list = #TODO YAMLREF
 
-        # Checking for EPSG:4326
-        if self.epsg == 4326 :
+        if self.epsg == 4326 :  # Checking for EPSG:4326
             for f in clim_file_list :
                 with rasterio.open(clim_file) as tiff :
                     val = rasterio.sample.sample_gen(tiff, [self.xy_pt])    # Extracting pixel value
