@@ -1,5 +1,23 @@
+# Paths for bioclim_download.py
 url-files:
   chelsa: "../data/chelsa_bioclim19_S3paths.txt"
   worldclim: "../data/worldclim_bioclim19_30s_path.txt"
   test: "../data/test.txt"
 download-path: "../data/"
+
+# Chelsa V2.1 dataset parameters
+chelsa_data:
+  bio1:
+    name: "bio1"
+    unit: "Celcius"
+    scale: 0.1
+    offset: -273.15
+    filename: "CHELSA_bio1_1981-2010_V.2.1.tif"
+    explanation: "mean annual daily mean air temperatures averaged over 1 year"
+  bio2:
+    name: "bio2"
+    unit: "Celcius"
+    scale: 0.1
+    offset: 0
+    filename: "CHELSA_bio2_1981-2010_V.2.1.tif"
+    explanation: "mean diurnal range of temperatures averaged over 1 year"
