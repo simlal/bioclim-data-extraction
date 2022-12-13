@@ -6,24 +6,20 @@ from pyproj import Transformer
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import yaml
 
 # List of all EPSG reference codes
 EPSG_codes = [int(code) for code in pyproj.get_codes('EPSG', 'CRS')]
+ 
+# Reference to config.YAML containing metadata from https://chelsa-climate.org/bioclim/ 
+with open('./scripts/config.yaml') as f:
+    cfg = yaml.safe_load(f)
+# Nested dicts of Chelsa metadata
+chelsa_data = cfg['chelsa_data']
 
-# Aggregation of data from https://chelsa-climate.org/bioclim/ + filename ref
-chels_dat = {
-    'bio1' : {'name' : "bio1", 'unit' : "C", 'scale' : 0.1, 'offset' : -273.15, 'filename' : "CHELSA_bio1_1981-2010_V.2.1.tif"}
-}
-#? Probably not the best way to go
-chelsa_data = {
-    'name' : ['bio1', 'bio2', 'bio19'],
-    'unit' : ['°C', '°C', 'kg/m' ],
-    'scale' : [0.1, 0.1, 0.1],
-    'offset' : [-273.15, 0, 0],
-    'filename' : ['CHELSA_bio1_1981-2010_V.2.1.tif', 'CHELSA_bio2_1981-2010_V.2.1.tif', 'CHELSA_bio19_1981-2010_V.2.1.tif']
-}
+# Nested dicts of Worldclim metadata
+worldclim_data = cfg['worldclim_data']
 
-#TODO ADD YAML CONFIG AND STORE THE DATASETS INFO
 
 class CrsDataPoint :
     """
@@ -209,7 +205,7 @@ class CrsDataPoint :
                 crs_data_points[row['id']] = CrsDataPoint(row['id'], row['epsg'], row['x'], row['y'])
             return crs_data_points
 
-    def single_point_extraction(self, clim_file_list, unit, scale, offset):
+    def single_specimen_extraction(self, dataset, unit, scale, offset):
         """
         Extracts the pixel values from the specified GeoTIFF file. Calls transform_GPS if needed. 
         
@@ -231,20 +227,20 @@ class CrsDataPoint :
 
         >>> Example
         """
-        if clim_file_list == "all_worldclim" :
+        if dataset == "worldclim" :
             print("Extracting values for all variables bio1 to bio19 + elevation from WorldClim 2.1 dataset...")
-            # clim_file_list = #TODO YAMLREF
-        elif clim_file_list == "all_chelsa" :
+            clim_file_list = [v['filename'] for k,v in worldclim_data.items()]
+        elif dataset == "chelsa" :
             print("Extracting values for all variables bio1 to bio19 from CHELSA V2.1 dataset + elevation from WorldClim 2.1 dataset...")
-            # clim_file_list = #TODO YAMLREF
+            clim_file_list = [v['filename'] for k,v in chelsa_data.items()]
+            # clim_name_var = 
         else :
-            print("Extracting values for {} variables".format(clim_file_list))
-            # clim_file_list = #TODO YAMLREF
+            raise ValueError("Enter the dataset you want to extract the climate data from : chelsa or worldclim") 
 
-        #TODO ADD FOR TO LOOP THROUGH THE LIST OF CLIM_FILE_LIST
+        #TODO FIX UNIT, VAR REFERENCE + APPEND TO SINGLE DICT
         if self.epsg == 4326 :  # Checking for EPSG:4326
             for f in clim_file_list :
-                with rasterio.open(clim_file) as tiff :
+                with rasterio.open("./data/"+f) as tiff :
                     val = rasterio.sample.sample_gen(tiff, [self.xy_pt])    # Extracting pixel value
                     single_pt_dict = {}
                     # Saving corrected pixel value
@@ -252,15 +248,18 @@ class CrsDataPoint :
                         single_pt_dict = {'id' : self.id, 'epsg' : self.epsg, 'lon' : x, 'lat' : y, unit : v[0]*scale+offset}
                         print("x : {} y : {} v : {}".format(x,y,v))
                 return single_pt_dict
+        
+        #TODO FIX UNIT, VAR REFERENCE + APPEND TO SINGLE DICT
         else :
             print("Data point with x,y not other than EPSG:4326. Calling transform_GPS()...")
             transformed = self.transform_GPS()                    
-            with rasterio.open(clim_file) as tiff :
-                val = rasterio.sample.sample_gen(tiff, [transformed.xy_pt])
-                single_pt_dict = {}
-                for (x, y), v in zip([transformed.xy_pt], val) :
-                    single_pt_dict = {'id' : transformed.id, 'epsg' : transformed.epsg, 'lon' : x, 'lat' : y, unit : v[0]*scale+offset}
-            return single_pt_dict
+            for f in clim_file_list :
+                with rasterio.open("./data/"+f) as tiff :
+                    val = rasterio.sample.sample_gen(tiff, [transformed.xy_pt])
+                    single_pt_dict = {}
+                    for (x, y), v in zip([transformed.xy_pt], val) :
+                        single_pt_dict = {'id' : transformed.id, 'epsg' : transformed.epsg, 'lon' : x, 'lat' : y, unit : v[0]*scale+offset}
+                return single_pt_dict
 
     def get_climate():
         """
