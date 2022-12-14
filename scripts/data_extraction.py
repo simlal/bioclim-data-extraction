@@ -295,7 +295,7 @@ class CrsDataPoint :
                     'lon' : self.x,
                     'lat' : self.y,
                 } 
-                for k,v in chelsa_data.items() :
+                for k,v in worldclim_data.items() :
                     with rasterio.open("./data/"+v['filename']) as tiff :
                         pixel_val = rasterio.sample.sample_gen(tiff, [self.xy_pt])    # Extracting raw pixel value
                         for val in pixel_val :
@@ -322,7 +322,7 @@ class CrsDataPoint :
                     'lat' : transformed.y,
                 }
                 print("...than extracting values for all variables bio1 to bio19 from CHELSA V2.1\n")
-                for k,v in chelsa_data.items() :
+                for k,v in worldclim_data.items() :
                     with rasterio.open("./data/"+v['filename']) as tiff :
                         pixel_val = rasterio.sample.sample_gen(tiff, [transformed.xy_pt])    # Extracting raw pixel value
                         for val in pixel_val :
