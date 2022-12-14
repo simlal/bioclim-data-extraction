@@ -21,3 +21,34 @@ chelsa_data:
     offset: 0
     filename: "CHELSA_bio2_1981-2010_V.2.1.tif"
     explanation: "mean diurnal range of temperatures averaged over 1 year"
+  bio3:
+    name: "bio3"
+    unit: "Celcius"
+    scale: 0.1
+    offset: 0
+    filename: "CHELSA_bio3_1981-2010_V.2.1.tif"
+    explanation: "ratio of diurnal variation to annual variation in temperatures "
+
+# WorldClim V2.1 dataset parameters
+worldclim_data:
+  bio1:
+    name: "bio1"
+    unit: "Celcius"
+    filename: "wc2.1_30s_bio_1.tif"
+    explanation: "The mean of all the weekly mean temperatures. Each weekly mean temperature is the mean of the weekly maximum and minimum temperatures over the whole year."
+  bio2:
+    name: "bio2"
+    unit: "Celcius"
+    filename: "wc2.1_30s_bio_2.tif"
+    explanation: "The mean over the whole year of the weekly diurnal temperature ranges. Each weekly diurnal range is the difference between that week's maximum and minimum temperature. "
+  bio3:
+    name: "bio3"
+    unit: "Celcius"
+    filename: "wc2.1_30s_bio_3.tif"
+    explanation: "The mean diurnal range (parameter bio2) divided by the Annual Temperature Range (parameter bio7)."
+
+  elevation:
+    name: "elevation"
+    unit: "Meters"
+    filename: "wc2.1_30s_elev.tif"
+    explanation: "Elevation in meters derived from Shuttle Radar Topography Mission (SRTM)"
