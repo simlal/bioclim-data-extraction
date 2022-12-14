@@ -237,7 +237,11 @@ class CrsDataPoint :
                     'lon' : self.x,
                     'lat' : self.y,
                 }
-                print("Extracting values for all variables bio1 to bio19 from CHELSA V2.1 + elevation from WorldClim 2.1 dataset...\n") 
+                print(
+                    "Extracting values for {} at lon={:.3f} lat={:.3f}".format(self.id, self.x, self.y),
+                    " for all climate variables bio1 to bio19 in CHELSA V2.1 (1981-2010)",
+                    " + elevation from WorldClim 2.1 dataset"
+                ) 
                 for k,v in chelsa_data.items() :
                     with rasterio.open("./data/"+v['filename']) as tiff :
                         pixel_val = rasterio.sample.sample_gen(tiff, [self.xy_pt])    # Extracting raw pixel value
@@ -251,12 +255,12 @@ class CrsDataPoint :
                     for val in pixel_val :
                         single_pt_clim_data[worldclim_elev['name']+"_"+worldclim_elev['unit']] = val[0]
                         single_pt_clim_data[worldclim_elev['name']+"_explanation"] = worldclim_elev['explanation']
-                print(pd.DataFrame(data=single_pt_clim_data, index=[0]))
+                print("Done!")
                 return single_pt_clim_data
 
             # Calling transform_GPS to convert coordinates
             else :
-                print("Data point with x,y not other than EPSG:4326. Calling transform_GPS() method...")
+                print("Data point with x,y other than EPSG:4326. Calling transform_GPS() method...")
                 transformed = self.transform_GPS()
                 single_pt_clim_data = {
                     'id' : transformed.id,
@@ -264,7 +268,11 @@ class CrsDataPoint :
                     'lon' : transformed.x,
                     'lat' : transformed.y,
                 }
-                print("...than extracting values for all variables bio1 to bio19 from CHELSA V2.1\n")
+                print(
+                    "...than extracting values for {} at lon={:.3f} lat={:.3f}".format(transformed.id, transformed.x, transformed.y),
+                    " for all climate variables bio1 to bio19 in CHELSA V2.1 (1981-2010)",
+                    " + elevation in WorldClim 2.1 dataset..."
+                )
                 for k,v in chelsa_data.items() :
                     with rasterio.open("./data/"+v['filename']) as tiff :
                         pixel_val = rasterio.sample.sample_gen(tiff, [transformed.xy_pt])    # Extracting raw pixel value
@@ -278,15 +286,11 @@ class CrsDataPoint :
                     for val in pixel_val :
                         single_pt_clim_data[worldclim_elev['name']+"_"+worldclim_elev['unit']] = val[0]
                         single_pt_clim_data[worldclim_elev['name']+"_explanation"] = worldclim_elev['explanation']
-                print(pd.DataFrame(data=single_pt_clim_data, index=[0]))
-                return single_pt_clim_data                 
+                print("Done!")
+                return single_pt_clim_data  
         
         # WorldClim data extraction
         if dataset == "worldclim" :
-            print(
-                "Extracting values for all variables bio1 to bio19 + elevation", 
-                "from WorldClim 2.1 dataset...\n"
-                )
             # Checking for EPSG:4326
             if self.epsg == 4326 :  
                 single_pt_clim_data = {
@@ -294,12 +298,17 @@ class CrsDataPoint :
                     'epsg' : self.epsg,
                     'lon' : self.x,
                     'lat' : self.y,
-                } 
+                }
+                print(
+                    "Extracting values for {} at lon={:.3f} lat={:.3f}".format(self.id, self.x, self.y),
+                    " for all climate variables bio1 to bio19", 
+                    " + elevation in WorldClim 2.1 (1970-2000) dataset..."
+                ) 
                 for k,v in worldclim_data.items() :
                     with rasterio.open("./data/"+v['filename']) as tiff :
                         pixel_val = rasterio.sample.sample_gen(tiff, [self.xy_pt])    # Extracting raw pixel value
                         for val in pixel_val :
-                            single_pt_clim_data[k+"_"+v['unit']] = val[0]*v['scale']+v['offset']
+                            single_pt_clim_data[k+"_"+v['unit']] = val[0]
                             single_pt_clim_data[k+"_explanation"] = v['explanation']
                     
                     # Extract elevation data
@@ -308,12 +317,12 @@ class CrsDataPoint :
                     for val in pixel_val :
                         single_pt_clim_data[worldclim_elev['name']+"_"+worldclim_elev['unit']] = val[0]
                         single_pt_clim_data[worldclim_elev['name']+"_explanation"] = worldclim_elev['explanation']
-                print(pd.DataFrame(data=single_pt_clim_data, index=[0]))
+                print("Done!")
                 return single_pt_clim_data
 
             # Calling transform_GPS to convert coordinates
             else :
-                print("Data point with x,y not other than EPSG:4326. Calling transform_GPS() method...")
+                print("Data point with x,y other than EPSG:4326. Calling transform_GPS() method...")
                 transformed = self.transform_GPS()
                 single_pt_clim_data = {
                     'id' : transformed.id,
@@ -321,12 +330,15 @@ class CrsDataPoint :
                     'lon' : transformed.x,
                     'lat' : transformed.y,
                 }
-                print("...than extracting values for all variables bio1 to bio19 from CHELSA V2.1\n")
+                print(
+                    "...than extracting values for {} at lon={:.3f} lat={:.3f}".format(transformed.id, transformed.x, transformed.y), 
+                    "for all climate variables bio1 to bio19 + elevation in WorldClim V2.1 (1970-2000)..."
+                )
                 for k,v in worldclim_data.items() :
                     with rasterio.open("./data/"+v['filename']) as tiff :
                         pixel_val = rasterio.sample.sample_gen(tiff, [transformed.xy_pt])    # Extracting raw pixel value
                         for val in pixel_val :
-                            single_pt_clim_data[k+"_"+v['unit']] = val[0]*v['scale']+v['offset']
+                            single_pt_clim_data[k+"_"+v['unit']] = val[0]
                             single_pt_clim_data[k+"_explanation"] = v['explanation']
                     
                     # Extract elevation data
@@ -335,7 +347,6 @@ class CrsDataPoint :
                     for val in pixel_val :
                         single_pt_clim_data[worldclim_elev['name']+"_"+worldclim_elev['unit']] = val[0]
                         single_pt_clim_data[worldclim_elev['name']+"_explanation"] = worldclim_elev['explanation']   
-                print(pd.DataFrame(data=single_pt_clim_data, index=[0]))
                 return single_pt_clim_data    
         
         else :
