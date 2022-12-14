@@ -14,11 +14,11 @@ EPSG_codes = [int(code) for code in pyproj.get_codes('EPSG', 'CRS')]
 # Reference to config.YAML containing metadata from https://chelsa-climate.org/bioclim/ 
 with open('./scripts/config.yaml') as f:
     cfg = yaml.safe_load(f)
-# Nested dicts of Chelsa metadata
-chelsa_data = cfg['chelsa_data']
 
-# Nested dicts of Worldclim metadata
-worldclim_data = cfg['worldclim_data']
+# YAML shorthand refs
+chelsa_data = cfg['chelsa_data']        # Nested dicts of Chelsa metadata
+worldclim_data = cfg['worldclim_data']      # Nested dicts of Worldclim metadata
+worldclim_elev = cfg['worldclim_data']['elevation']     # Worldclim elevation dict of params
 
 
 class CrsDataPoint :
@@ -205,7 +205,7 @@ class CrsDataPoint :
                 crs_data_points[row['id']] = CrsDataPoint(row['id'], row['epsg'], row['x'], row['y'])
             return crs_data_points
 
-    def single_specimen_extraction(self, dataset, unit, scale, offset):
+    def single_specimen_extraction(self, dataset):
         """
         Extracts the pixel values from the specified GeoTIFF file. Calls transform_GPS if needed. 
         
@@ -227,52 +227,133 @@ class CrsDataPoint :
 
         >>> Example
         """
+        # CHELSA data extraction
+        if dataset == "chelsa" :
+            # Checking for EPSG:4326
+            if self.epsg == 4326 :  
+                single_pt_clim_data = {
+                    'id' : self.id,
+                    'epsg' : self.epsg,
+                    'lon' : self.x,
+                    'lat' : self.y,
+                }
+                print("Extracting values for all variables bio1 to bio19 from CHELSA V2.1 + elevation from WorldClim 2.1 dataset...\n") 
+                for k,v in chelsa_data.items() :
+                    with rasterio.open("./data/"+v['filename']) as tiff :
+                        pixel_val = rasterio.sample.sample_gen(tiff, [self.xy_pt])    # Extracting raw pixel value
+                        for val in pixel_val :
+                            single_pt_clim_data[k+"_"+v['unit']] = val[0]*v['scale']+v['offset']
+                            single_pt_clim_data[k+"_explanation"] = v['explanation']
+                
+                # Extract elevation data
+                with rasterio.open("./data/"+worldclim_elev['filename']) as tiff :
+                    pixel_val = rasterio.sample.sample_gen(tiff, [self.xy_pt])
+                    for val in pixel_val :
+                        single_pt_clim_data[worldclim_elev['name']+"_"+worldclim_elev['unit']] = val[0]
+                        single_pt_clim_data[worldclim_elev['name']+"_explanation"] = worldclim_elev['explanation']
+                print(pd.DataFrame(data=single_pt_clim_data, index=[0]))
+                return single_pt_clim_data
+
+            # Calling transform_GPS to convert coordinates
+            else :
+                print("Data point with x,y not other than EPSG:4326. Calling transform_GPS() method...")
+                transformed = self.transform_GPS()
+                single_pt_clim_data = {
+                    'id' : transformed.id,
+                    'epsg' : transformed.epsg,
+                    'lon' : transformed.x,
+                    'lat' : transformed.y,
+                }
+                print("...than extracting values for all variables bio1 to bio19 from CHELSA V2.1\n")
+                for k,v in chelsa_data.items() :
+                    with rasterio.open("./data/"+v['filename']) as tiff :
+                        pixel_val = rasterio.sample.sample_gen(tiff, [transformed.xy_pt])    # Extracting raw pixel value
+                        for val in pixel_val :
+                            single_pt_clim_data[k+"_"+v['unit']] = val[0]*v['scale']+v['offset']
+                            single_pt_clim_data[k+"_explanation"] = v['explanation']
+                    
+                # Extract elevation data
+                with rasterio.open("./data/"+worldclim_elev['filename']) as tiff :
+                    pixel_val = rasterio.sample.sample_gen(tiff, [transformed.xy_pt])
+                    for val in pixel_val :
+                        single_pt_clim_data[worldclim_elev['name']+"_"+worldclim_elev['unit']] = val[0]
+                        single_pt_clim_data[worldclim_elev['name']+"_explanation"] = worldclim_elev['explanation']
+                print(pd.DataFrame(data=single_pt_clim_data, index=[0]))
+                return single_pt_clim_data                 
+        
+        # WorldClim data extraction
         if dataset == "worldclim" :
-            print("Extracting values for all variables bio1 to bio19 + elevation from WorldClim 2.1 dataset...")
-            clim_file_list = [v['filename'] for k,v in worldclim_data.items()]
-        elif dataset == "chelsa" :
-            print("Extracting values for all variables bio1 to bio19 from CHELSA V2.1 dataset + elevation from WorldClim 2.1 dataset...")
-            clim_file_list = [v['filename'] for k,v in chelsa_data.items()]
-            # clim_name_var = 
+            print(
+                "Extracting values for all variables bio1 to bio19 + elevation", 
+                "from WorldClim 2.1 dataset...\n"
+                )
+            # Checking for EPSG:4326
+            if self.epsg == 4326 :  
+                single_pt_clim_data = {
+                    'id' : self.id,
+                    'epsg' : self.epsg,
+                    'lon' : self.x,
+                    'lat' : self.y,
+                } 
+                for k,v in chelsa_data.items() :
+                    with rasterio.open("./data/"+v['filename']) as tiff :
+                        pixel_val = rasterio.sample.sample_gen(tiff, [self.xy_pt])    # Extracting raw pixel value
+                        for val in pixel_val :
+                            single_pt_clim_data[k+"_"+v['unit']] = val[0]*v['scale']+v['offset']
+                            single_pt_clim_data[k+"_explanation"] = v['explanation']
+                    
+                    # Extract elevation data
+                with rasterio.open("./data/"+worldclim_elev['filename']) as tiff :
+                    pixel_val = rasterio.sample.sample_gen(tiff, [self.xy_pt])
+                    for val in pixel_val :
+                        single_pt_clim_data[worldclim_elev['name']+"_"+worldclim_elev['unit']] = val[0]
+                        single_pt_clim_data[worldclim_elev['name']+"_explanation"] = worldclim_elev['explanation']
+                print(pd.DataFrame(data=single_pt_clim_data, index=[0]))
+                return single_pt_clim_data
+
+            # Calling transform_GPS to convert coordinates
+            else :
+                print("Data point with x,y not other than EPSG:4326. Calling transform_GPS() method...")
+                transformed = self.transform_GPS()
+                single_pt_clim_data = {
+                    'id' : transformed.id,
+                    'epsg' : transformed.epsg,"than extracting values for all variables bio1 to bio19 from CHELSA V2.1"
+                    'lon' : transformed.x,
+                    'lat' : transformed.y,
+                }
+                print("...than extracting values for all variables bio1 to bio19 from CHELSA V2.1\n")
+                for k,v in chelsa_data.items() :
+                    with rasterio.open("./data/"+v['filename']) as tiff :
+                        pixel_val = rasterio.sample.sample_gen(tiff, [transformed.xy_pt])    # Extracting raw pixel value
+                        for val in pixel_val :
+                            single_pt_clim_data[k+"_"+v['unit']] = val[0]*v['scale']+v['offset']
+                            single_pt_clim_data[k+"_explanation"] = v['explanation']
+                    
+                    # Extract elevation data
+                with rasterio.open("./data/"+worldclim_elev['filename']) as tiff :
+                    pixel_val = rasterio.sample.sample_gen(tiff, [transformed.xy_pt])
+                    for val in pixel_val :
+                        single_pt_clim_data[worldclim_elev['name']+"_"+worldclim_elev['unit']] = val[0]
+                        single_pt_clim_data[worldclim_elev['name']+"_explanation"] = worldclim_elev['explanation']   
+                print(pd.DataFrame(data=single_pt_clim_data, index=[0]))
+                return single_pt_clim_data    
+        
         else :
             raise ValueError("Enter the dataset you want to extract the climate data from : chelsa or worldclim") 
 
-        #TODO FIX UNIT, VAR REFERENCE + APPEND TO SINGLE DICT
-        if self.epsg == 4326 :  # Checking for EPSG:4326
-            for f in clim_file_list :
-                with rasterio.open("./data/"+f) as tiff :
-                    val = rasterio.sample.sample_gen(tiff, [self.xy_pt])    # Extracting pixel value
-                    single_pt_dict = {}
-                    # Saving corrected pixel value
-                    for (x, y), v in zip([self.xy_pt], val) :
-                        single_pt_dict = {'id' : self.id, 'epsg' : self.epsg, 'lon' : x, 'lat' : y, unit : v[0]*scale+offset}
-                        print("x : {} y : {} v : {}".format(x,y,v))
-                return single_pt_dict
-        
-        #TODO FIX UNIT, VAR REFERENCE + APPEND TO SINGLE DICT
-        else :
-            print("Data point with x,y not other than EPSG:4326. Calling transform_GPS()...")
-            transformed = self.transform_GPS()                    
-            for f in clim_file_list :
-                with rasterio.open("./data/"+f) as tiff :
-                    val = rasterio.sample.sample_gen(tiff, [transformed.xy_pt])
-                    single_pt_dict = {}
-                    for (x, y), v in zip([transformed.xy_pt], val) :
-                        single_pt_dict = {'id' : transformed.id, 'epsg' : transformed.epsg, 'lon' : x, 'lat' : y, unit : v[0]*scale+offset}
-                return single_pt_dict
 
-    def get_climate():
-        """
-        A method to extract the corrected value for the wanted raster dataset. Will output multiple climate variables on demand.
+    # def get_climate():
+    #     """
+    #     A method to extract the corrected value for the wanted raster dataset. Will output multiple climate variables on demand.
 
-        Parameters
-        ----------
-        ? : ?
+    #     Parameters
+    #     ----------
+    #     ? : ?
 
-        Returns
-        -------
-        A dataframe with the sample id, lon(x) (in EPSG:4326), lat(y) (in EPSG:4326) and the corrected value extracted climatic data.
-        Multiple or all climatic values can be returned in the same dataframe if desired.
-        """        
+    #     Returns
+    #     -------
+    #     A dataframe with the sample id, lon(x) (in EPSG:4326), lat(y) (in EPSG:4326) and the corrected value extracted climatic data.
+    #     Multiple or all climatic values can be returned in the same dataframe if desired.
+    #     """        
 
 
