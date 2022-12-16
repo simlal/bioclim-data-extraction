@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import yaml
+import re
 
 # List of all EPSG reference codes
 EPSG_codes = [int(code) for code in pyproj.get_codes('EPSG', 'CRS')]
@@ -361,7 +362,8 @@ class CrsDataPoint :
             raise ValueError("Enter the dataset you want to extract the climate data from : \"chelsa\" or \"worldclim\"") 
 
 
-    def trim_extracted_data():
+    #TODO FIGURE OUT HOW TO IMPLEMENT NON-CLASS METHOD AS FUNC
+    def trim_extracted_data(full_clim_data_dict):
         """
         Method that trims the extracted climate data dictionnary and returns a simplified version with essential data only
 
@@ -375,8 +377,16 @@ class CrsDataPoint :
         Trimmed down version of the extracted climate data dictionnary
 
         >>>
-
+        
         """
+        # Return all keys from dict
+        all_keys = [k for k in full_clim_data_dict.keys()]
+        # Filter for columns with corrected climate data (bio# (Unit) key) + append to id,epsg,lon,lat cols
+        filtered_keys = all_keys[:4] + [key for key in all_keys[4:] if re.search("bio[0-9]* ", key)]
+
+        # Extract filtered keys from full climate data dict
+        light_clim_data_dict = dict((k, full_clim_data_dict[k]) for k in filtered_keys if k in full_clim_data_dict)
+        return light_clim_data_dict
     
     # def get_climate():
     #     """
