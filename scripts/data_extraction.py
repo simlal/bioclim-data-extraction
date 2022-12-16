@@ -217,7 +217,8 @@ class CrsDataPoint :
 
         Returns
         -------
-        A dictionnary containing sample id, lon(x), lat(y), corrected climate pixel value
+        A dictionnary containing sample id, lon(x), lat(y), bio# (Unit) : Corrected (scale + offset where needed) pixel value,
+        bio#_longname : Name of the measurement, bio#_explanation : Brief explanation of measurement.
 
         >>> sherby = CrsDataPoint('Sherbrooke', epsg=4326, x=-71.890068, y=45.393869) 
         >>> sherby_chelsa = sherby.single_specimen_extraction(dataset='chelsa')
