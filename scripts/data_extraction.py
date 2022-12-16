@@ -212,20 +212,14 @@ class CrsDataPoint :
 
         Parameters
         ----------
-        clim_file : .tiff
-            GeoTIFF raster file for the wanted climate data variable
-        unit : string
-            Unit name of the corresponding climate variable
-        scale : float
-            The correction to factor to apply (multiply) to the raw pixel value sampled
-        offset : float
-            The correction factor to apply (addition) to the raw pixel value sampled
+        dataset : string
+            Name of the dataset to extract the data from : "chelsa" or "worldclim"
 
         Returns
         -------
         A dictionnary containing sample id, lon(x), lat(y), corrected climate pixel value
 
-        >>> Example
+        >>> 
         """
         # CHELSA data extraction
         if dataset == "chelsa" :
@@ -240,7 +234,7 @@ class CrsDataPoint :
                 print(
                     "Extracting values for {} at lon={:.3f} lat={:.3f}".format(self.id, self.x, self.y),
                     " for all climate variables bio1 to bio19 in CHELSA V2.1 (1981-2010)",
-                    " + elevation from WorldClim 2.1 dataset"
+                    " + elevation from WorldClim 2.1 dataset..."
                 ) 
                 for k,v in chelsa_data.items() :
                     with rasterio.open("./data/"+v['filename']) as tiff :
@@ -354,7 +348,7 @@ class CrsDataPoint :
                 return single_pt_clim_data    
         
         else :
-            raise ValueError("Enter the dataset you want to extract the climate data from : chelsa or worldclim") 
+            raise ValueError("Enter the dataset you want to extract the climate data from : \"chelsa\" or \"worldclim\"") 
 
 
     # def get_climate():
