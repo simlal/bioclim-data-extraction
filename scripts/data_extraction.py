@@ -246,7 +246,8 @@ class CrsDataPoint :
                     with rasterio.open("./data/"+v['filename']) as tiff :
                         pixel_val = rasterio.sample.sample_gen(tiff, [self.xy_pt])    # Extracting raw pixel value
                         for val in pixel_val :
-                            single_pt_clim_data[k+"_"+v['unit']] = val[0]*v['scale']+v['offset']
+                            single_pt_clim_data[k+' ('+v['unit']+')'] = val[0]*v['scale']+v['offset']
+                            single_pt_clim_data[k+"_longname"] = v['longname']
                             single_pt_clim_data[k+"_explanation"] = v['explanation']
                 
                 # Extract elevation data
@@ -277,7 +278,8 @@ class CrsDataPoint :
                     with rasterio.open("./data/"+v['filename']) as tiff :
                         pixel_val = rasterio.sample.sample_gen(tiff, [transformed.xy_pt])    # Extracting raw pixel value
                         for val in pixel_val :
-                            single_pt_clim_data[k+"_"+v['unit']] = val[0]*v['scale']+v['offset']
+                            single_pt_clim_data[k+' ('+v['unit']+')'] = val[0]*v['scale']+v['offset']
+                            single_pt_clim_data[k+"_longname"] = v['longname']
                             single_pt_clim_data[k+"_explanation"] = v['explanation']
                     
                 # Extract elevation data
@@ -308,7 +310,8 @@ class CrsDataPoint :
                     with rasterio.open("./data/"+v['filename']) as tiff :
                         pixel_val = rasterio.sample.sample_gen(tiff, [self.xy_pt])    # Extracting raw pixel value
                         for val in pixel_val :
-                            single_pt_clim_data[k+"_"+v['unit']] = val[0]
+                            single_pt_clim_data[k+' ('+v['unit']+')'] = val[0]
+                            single_pt_clim_data[k+"_longname"] = v['longname']
                             single_pt_clim_data[k+"_explanation"] = v['explanation']
                     
                     # Extract elevation data
@@ -338,7 +341,8 @@ class CrsDataPoint :
                     with rasterio.open("./data/"+v['filename']) as tiff :
                         pixel_val = rasterio.sample.sample_gen(tiff, [transformed.xy_pt])    # Extracting raw pixel value
                         for val in pixel_val :
-                            single_pt_clim_data[k+"_"+v['unit']] = val[0]
+                            single_pt_clim_data[k+' ('+v['unit']+')'] = val[0]
+                            single_pt_clim_data[k+"_longname"] = v['longname']
                             single_pt_clim_data[k+"_explanation"] = v['explanation']
                     
                     # Extract elevation data
