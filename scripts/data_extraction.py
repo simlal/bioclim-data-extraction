@@ -361,6 +361,23 @@ class CrsDataPoint :
             raise ValueError("Enter the dataset you want to extract the climate data from : \"chelsa\" or \"worldclim\"") 
 
 
+    def trim_extracted_data():
+        """
+        Method that trims the extracted climate data dictionnary and returns a simplified version with essential data only
+
+        Parameters
+        ----------
+        full_extracted_data : dictionnary
+            Dictionnary containing the full climate data obtained with the single_specimen_extraction() method
+
+        Returns
+        -------
+        Trimmed down version of the extracted climate data dictionnary
+
+        >>>
+
+        """
+    
     # def get_climate():
     #     """
     #     A method to extract the corrected value for the wanted raster dataset. Will output multiple climate variables on demand.
