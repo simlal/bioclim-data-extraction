@@ -27,7 +27,120 @@ chelsa_data:
     scale: 0.1
     offset: 0
     filename: "CHELSA_bio3_1981-2010_V.2.1.tif"
-    explanation: "ratio of diurnal variation to annual variation in temperatures "
+    explanation: "ratio of diurnal variation to annual variation in temperatures"
+  bio4:
+    name: "bio4"
+    unit: "Celcius/100"
+    scale: 0.1
+    offset: 0
+    filename: "CHELSA_bio4_1981-2010_V.2.1.tif"
+    explanation: "standard deviation of the monthly mean temperatures"
+  bio5:
+    name: "bio5"
+    unit: "Celcius"
+    scale: 0.1
+    offset: -273.15
+    filename: "CHELSA_bio5_1981-2010_V.2.1.tif"
+    explanation: " The highest temperature of any monthly daily mean maximum temperature"
+  bio6:
+    name: "bio6"
+    unit: "Celcius"
+    scale: 0.1
+    offset: -273.15
+    filename: "CHELSA_bio6_1981-2010_V.2.1.tif"
+    explanation: "The lowest temperature of any monthly daily mean maximum temperature"
+  bio7:
+    name: "bio7"
+    unit: "Celcius"
+    scale: 0.1
+    offset: 0
+    filename: "CHELSA_bio7_1981-2010_V.2.1.tif"
+    explanation: "The difference between the Maximum Temperature of Warmest month and the Minimum Temperature of Coldest month"
+  bio8:
+    name: "bio8"
+    unit: "Celcius"
+    scale: 0.1
+    offset: -273.15
+    filename: "CHELSA_bio8_1981-2010_V.2.1.tif"
+    explanation: "The wettest quarter of the year is determined (to the nearest month)"
+  bio9:
+    name: "bio9"
+    unit: "Celcius"
+    scale: 0.1
+    offset: -273.15
+    filename: "CHELSA_bio9_1981-2010_V.2.1.tif"
+    explanation: "The driest quarter of the year is determined (to the nearest month)"
+  bio10:
+    name: "bio10"
+    unit: "Celcius"
+    scale: 0.1
+    offset: -273.15
+    filename: "CHELSA_bio10_1981-2010_V.2.1.tif"
+    explanation: "The warmest quarter of the year is determined (to the nearest month"
+  bio11:
+    name: "bio11"
+    unit: "Celcius"
+    scale: 0.1
+    offset: -273.15
+    filename: "CHELSA_bio11_1981-2010_V.2.1.tif"
+    explanation: "The coldest quarter of the year is determined (to the nearest month)"
+  bio12:
+    name: "bio12"
+    unit: "kg / m**2 / year"
+    scale: 0.1
+    offset: 0
+    filename: "CHELSA_bio12_1981-2010_V.2.1.tif"
+    explanation: "Accumulated precipitation amount over 1 year"
+  bio13:
+    name: "bio13"
+    unit: "kg / m**2 / month"
+    scale: 0.1
+    offset: 0
+    filename: "CHELSA_bio13_1981-2010_V.2.1.tif"
+    explanation: ""
+  bio14:
+    name: "bio14"
+    unit: "kg / m**2 / month"
+    scale: 0.1
+    offset: 0 
+    filename: "CHELSA_bio14_1981-2010_V.2.1.tif"
+    explanation: ""
+  bio15:
+    name: "bio15"
+    unit: "kg / m**2"
+    scale: 0.1
+    offset: 0 
+    filename: "CHELSA_bio15_1981-2010_V.2.1.tif"
+    explanation: ""
+  bio16:
+    name: "bio16"
+    unit: "kg / m**2 / month"
+    scale: 0.1
+    offset: 0 
+    filename: "CHELSA_bio16_1981-2010_V.2.1.tif"
+    explanation: ""
+  bio17:
+    name: "bio17"
+    unit: "kg / m**2 / month"
+    scale: 0.1
+    offset: 0 
+    filename: "CHELSA_bio17_1981-2010_V.2.1.tif"
+    explanation: ""
+  bio18:
+    name: "bio18"
+    unit: "kg / m**2 / month"
+    scale: 0.1
+    offset: 0 
+    filename: "CHELSA_bio18_1981-2010_V.2.1.tif"
+    explanation: ""
+  bio19:
+    name: "bio19"
+    unit: "kg / m**2 / month"
+    scale: 0.1
+    offset: 0 
+    filename: "CHELSA_bio19_1981-2010_V.2.1.tif"
+    explanation: ""
+    
 
 # WorldClim V2.1 dataset parameters
 worldclim_data:
@@ -46,7 +159,86 @@ worldclim_data:
     unit: "Celcius"
     filename: "wc2.1_30s_bio_3.tif"
     explanation: "The mean diurnal range (parameter bio2) divided by the Annual Temperature Range (parameter bio7)."
-
+  bio4:
+    name: "bio4"
+    unit: "Celcius/100"
+    filename: "wc2.1_30s_bio_4.tif"
+    explanation : "The temperature Coefficient of Variation (C of V) is the standard deviation of the weekly mean temperatures expressed as a percentage of the mean of those temperatures. For this calculation, the mean in degrees Kelvin is used. This avoids the possibility o f having to divide by zero, but it does mean that the values are usually quite small."
+  bio5:
+    name: "bio5"
+    unit: "Celcius"
+    filename: "wc2.1_30s_bio_5.tif"
+    explanation : "The highest maximum temperature in all weeks of the year."
+  bio6:
+    name: "bio6"
+    unit: "Celcius"
+    filename: "wc2.1_30s_bio_6.tif"
+    explanation : "The lowest minimum temperature in all weeks of the year."
+  bio7:
+    name: "bio7"
+    unit: "Celcius"
+    filename: "wc2.1_30s_bio_7.tif"
+    explanation : "The difference between the Max Temperature of Warmest Period and the Min Temperature of Coldest Period."
+  bio8:
+    name: "bio8"
+    unit: "Celcius"
+    filename: "wc2.1_30s_bio_8.tif"
+    explanation : "The wettest quarter of the year is determined (to the nearest week), and the mean temperature of this period is calculated. "
+  bio9:
+    name: "bio9"
+    unit: "Celcius"
+    filename: "wc2.1_30s_bio_9.tif"
+    explanation : "The driest quarter of the year is determined (to the nearest week), and the mean temperature of this period is calculated."
+  bio10:
+    name: "bio10"
+    unit: "Celcius"
+    filename: "wc2.1_30s_bio_10.tif"
+    explanation : "The warmest quarter of the year is determined (to the nearest week), and the mean temperature of this period is calculated."
+  bio11:
+    name: "bio11"
+    unit: "Celcius"
+    filename: "wc2.1_30s_bio_11.tif"
+    explanation : "The coldest quarter of the year is determined (to the nearest week), and the mean temperature of this period is calculated."
+  bio12:
+    name: "bio12"
+    unit: "kg / m**2 / year"
+    filename: "wc2.1_30s_bio_12.tif"
+    explanation : "The sum of all 12 monthly precipitation estimates."
+  bio13:
+    name: "bio13"
+    unit: "kg / m**2 / month"
+    filename: "wc2.1_30s_bio_13.tif"
+    explanation : "The precipitation of the wettest week or month, depending on the time step."
+  bio14:
+    name: "bio14"
+    unit: "kg / m**2 / month"
+    filename: "wc2.1_30s_bio_14.tif"
+    explanation : "The precipitation of the driest week or month, depending on the time step."
+  bio15:
+    name: "bio15"
+    unit: "kg / m**2"
+    filename: "wc2.1_30s_bio_15.tif"
+    explanation : "The Coefficient of Variation (C of V) is the standard deviation of the weekly precipitation estimates expressed as a percentage of the mean of those estimates."
+  bio16:
+    name: "bio16"
+    unit: "kg / m**2 / month"
+    filename: "wc2.1_30s_bio_16.tif"
+    explanation : "The wettest quarter of the year is determined (to the nearest week), and the total precipitation over this period is calculated."
+  bio17:
+    name: "bio17"
+    unit: "kg / m**2 / month"
+    filename: "wc2.1_30s_bio_17.tif"
+    explanation : "The driest quarter of the year is determined (to the nearest week), and the total precipitation over this period is calculated."
+  bio18:
+    name: "bio18"
+    unit: "kg / m**2 / month"
+    filename: "wc2.1_30s_bio_18.tif"
+    explanation : "The warmest quarter of the year is determined (to the nearest week), and the total precipitation over this period is calculated."
+  bio19:
+    name: "bio19"
+    unit: "kg / m**2 / month"
+    filename: "wc2.1_30s_bio_19.tif"
+    explanation : "The coldest quarter of the year is determined (to the nearest week), and the total precipitation over this period is calculated."
   elevation:
     name: "elevation"
     unit: "Meters"
