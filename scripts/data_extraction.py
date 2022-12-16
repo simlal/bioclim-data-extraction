@@ -224,12 +224,12 @@ class CrsDataPoint :
         >>> sherby_chelsa = sherby.single_specimen_extraction(dataset='chelsa')
         Extracting values for Sherbrooke at lon=-71.890 lat=45.394  for all climate variables bio1 to bio19 in CHELSA V2.1 (1981-2010)  + elevation from WorldClim 2.1 dataset...
         Done!
-        >>> all_keys = [k for k in sherby_chelsa.keys()]
-        >>> import re
-        >>> filtered_keys = all_keys[:4] + [key for key in all_keys[4:] if re.search("bio[0-9]* ", key)]
-        >>> sherby_chelsa_light = dict((k, sherby_chelsa[k]) for k in filtered_keys if k in sherby_chelsa)
-        >>> print(sherby_chelsa_light)
-        {'id': 'Sherbrooke', 'epsg': 4326, 'lon': -71.890068, 'lat': 45.393869, 'bio1 (Celcius)': 6.050000000000011, 'bio2 (Celcius)': 9.1, 'bio3 (Celcius)': 23.400000000000002, 'bio4 (Celcius/100)': 1020.1, 'bio5 (Celcius)': 24.250000000000057, 'bio6 (Celcius)': -14.749999999999943, 'bio7 (Celcius)': 39.0, 'bio8 (Celcius)': 18.650000000000034, 'bio9 (Celcius)': -6.449999999999989, 'bio10 (Celcius)': 18.650000000000034, 'bio11 (Celcius)': -7.649999999999977, 'bio12 (kg / m**2 / year)': 1188.5, 'bio13 (kg / m**2 / month)': 129.4, 'bio14 (kg / m**2 / month)': 65.4, 'bio15 (kg / m**2)': 19.6, 'bio16 (kg / m**2 / month)': 375.8, 'bio17 (kg / m**2 / month)': 219.4, 'bio18 (kg / m**2 / month)': 375.8, 'bio19 (kg / m**2 / month)': 243.0}
+        >>> import pandas as pd
+        >>> pd.DataFrame([sherby_chelsa])
+                id  epsg  ...  elevation_Meters                              elevation_explanation
+        0  Sherbrooke  4326  ...               158  Elevation in meters derived from Shuttle Radar...
+
+        [1 rows x 63 columns]
         """
         # CHELSA data extraction
         if dataset == "chelsa" :
