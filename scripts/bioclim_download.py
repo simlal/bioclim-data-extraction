@@ -2,6 +2,8 @@ import yaml
 import requests
 import time
 from functools import partial
+from zipfile import ZipFile
+import os
 
 # Get urls from url-file
 def get_urls(urlfile):
@@ -49,6 +51,36 @@ def download_single(url, savepath):
         print("File {} cannot be downloaded. Status code : {}".format(filename, response.status_code))
     return savepath+filename
 
+def unzip_worldclim(download_path, biozip, elevzip) :
+    # Unzipping wc2.1_30s_bio.zip
+    print("Extracting {} to {} directory...".format(biozip, download_path))
+    with ZipFile(download_path+biozip) as zipObj_bio :
+        for file in zipObj_bio.namelist() :
+            print("Unzipping file {}...".format(file))
+            zipObj_bio.extract(file, download_path)
+            print("Done !")
+    
+    print("Deleting unecessary .zip files...")  # deleting
+    if os.path.exists(download_path+biozip):
+        os.remove(download_path+biozip)
+        print("Deleted {}".format(biozip))
+    else:
+        print("Could not find {}".format(biozip))
+    
+    # Unzipping wc2.1_30s_elev.zip
+    with ZipFile(download_path+elevzip) as zipObj_elev :
+        print("Unzipping file {}...".format(elevzip))
+        zipObj_elev.extractall(download_path)
+        print("Done !")
+    
+    print("Deleting unecessary .zip files...")  # deleting
+    if os.path.exists(download_path+elevzip):
+        os.remove(download_path+elevzip)
+        print("Deleted {}".format(elevzip))
+    else:
+        print("Could not find {}".format(elevzip))
+
+
 if __name__ == "__main__" :
     
     # Load yaml and set vars
@@ -77,17 +109,27 @@ if __name__ == "__main__" :
 
     # Download all user-wanted files
     download_fixpath = partial(download_single, savepath = download_path)   # fix download_single with a single arg
+    # zipfiles name for WorldClim
+    wc_biozip = "wc2.1_30s_bio.zip"
+    wc_elevzip = "wc2.1_30s_elev.zip"
+
     # Chelsa dataset only
     if to_download == "chelsa" :
         chelsa = get_urls(chelsa_urls)
         list(map(download_fixpath, chelsa))
+        print("Finished downloading CHELSA V2.1 bioclim dataset")
     
     elif to_download == "worldclim" :
-        worldclim = get_urls(worldclim_urls)
-        list(map(download_fixpath, worldclim))
+        # worldclim = get_urls(worldclim_urls)
+        # list(map(download_fixpath, worldclim))
+        print("Finished downloading WorldClim V2.1 bioclim + elevation dataset")
+        unzip_worldclim(download_path, wc_biozip, wc_elevzip)
 
     else : 
         chelsa = get_urls(chelsa_urls)
         worldclim = get_urls(worldclim_urls)
         list(map(download_fixpath, chelsa))
+        print("Finished downloading CHELSA V2.1 bioclim dataset")
         list(map(download_fixpath, worldclim))
+        unzip_worldclim(download_path, wc_biozip, wc_elevzip)
+        
