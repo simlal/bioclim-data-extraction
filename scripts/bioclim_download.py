@@ -52,7 +52,7 @@ def download_single(url, savepath):
 if __name__ == "__main__" :
     
     # Load yaml and set vars
-    with open('config.yaml') as f:
+    with open('./scripts/config.yaml') as f:
         config = yaml.safe_load(f)
     chelsa_urls = config["url-files"]["chelsa"]
     worldclim_urls = config["url-files"]["worldclim"]
