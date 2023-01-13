@@ -213,7 +213,7 @@ class CrsDataPoint :
 
     def single_specimen_extraction(self, dataset):
         """
-        Extracts the pixel values from the specified GeoTIFF file. Calls transform_crs if needed. 
+        Extracts the pixel values from the specified GeoTIFF file. Calls transform_crs() method if needed. 
         
 
         Parameters
