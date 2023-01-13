@@ -156,6 +156,11 @@ class CrsDataPoint :
             (x,y) = (-71.89006805555556, 45.39386888888889)
 
         """
+        # Check if code valid
+        if epsg_out not in EPSG_codes:
+            raise ValueError("Input EPSG code not valid, see https://pyproj4.github.io/pyproj/stable/api/database.html#pyproj.database.get_codes")
+        
+        # Call transform method from pyproj
         transformer = Transformer.from_crs(self.epsg, CRS.from_epsg(epsg_out), always_xy=True)
         x_out, y_out = transformer.transform(self.x, self.y)
         return CrsDataPoint(self.id+"_transformed", epsg_out, x_out, y_out)
