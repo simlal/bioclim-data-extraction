@@ -46,7 +46,7 @@ class CrsDataPoint :
     __str__():
         Prints the CrsDataPoint information
 
-    transform_gps(epsg_out):
+    transform_crs(epsg_out):
         Transforms the coordinates to the desired EPSG coordinate reference system
 
     df_to_dict(df):
@@ -126,7 +126,7 @@ class CrsDataPoint :
             )
 
     
-    def transform_GPS(self, epsg_out=4326) :
+    def transform_crs(self, epsg_out=4326) :
         """
         Transforms the coordinates to the desired EPSG coordinate reference system. 
         Default argument is EPSG:4326 which is the reference for the WorldClim and Chelsa datasets
@@ -146,7 +146,7 @@ class CrsDataPoint :
             latitude (y-value, East-West lines) that range between -90 and +90 degrees.
 
         >>> sherby = CrsDataPoint('Sherbrooke', epsg=3857, x=-8002765.769038227, y=5683742.6823244635)
-        >>> sherby_gps = sherby.transform_GPS()
+        >>> sherby_gps = sherby.transform_crs()
         >>> print(sherby_gps)
         id : Sherbrooke_transformed
         EPSG : 4326
@@ -163,7 +163,7 @@ class CrsDataPoint :
     def df_to_dict(df) :
         """
         Takes the input df and returns a dictionnary of CrsDataPoint objects.
-        Calls transform_GPS() method if any epsg codes are not 4326.
+        Calls transform_crs() method if any epsg codes are not 4326.
 
         Parameters
         ----------
@@ -182,7 +182,7 @@ class CrsDataPoint :
         ...     'y' : [5683742.6823244635, 48.858885],
         ...         })
         >>> cities = CrsDataPoint.df_to_dict(df)
-        Dataframe contains data with CRS other than EPSG:4326. Calling transform_GPS()...
+        Dataframe contains data with CRS other than EPSG:4326. Calling transform_crs()...
         >>> print(cities['Sherbrooke'])
         id : Sherbrooke_transformed
         EPSG : 4326
@@ -194,12 +194,12 @@ class CrsDataPoint :
         """
         crs_data_points = {}
         if (df['epsg'] != 4326).any() == True :
-            print("Dataframe contains data with CRS other than EPSG:4326. Calling transform_GPS()...")
+            print("Dataframe contains data with CRS other than EPSG:4326. Calling transform_crs()...")
             for index, row in df.iterrows() :
                 if row['epsg'] == 4326 : 
                     crs_data_points[row['id']] = CrsDataPoint(row['id'], row['epsg'], row['x'], row['y'])
                 else : 
-                    crs_data_points[row['id']] = CrsDataPoint(row['id'], row['epsg'], row['x'], row['y']).transform_GPS()
+                    crs_data_points[row['id']] = CrsDataPoint(row['id'], row['epsg'], row['x'], row['y']).transform_crs()
             return crs_data_points
         else :     
             for index, row in df.iterrows() :
@@ -208,7 +208,7 @@ class CrsDataPoint :
 
     def single_specimen_extraction(self, dataset):
         """
-        Extracts the pixel values from the specified GeoTIFF file. Calls transform_GPS if needed. 
+        Extracts the pixel values from the specified GeoTIFF file. Calls transform_crs if needed. 
         
 
         Parameters
@@ -264,10 +264,10 @@ class CrsDataPoint :
                 print("Done!")
                 return single_pt_clim_data
 
-            # Calling transform_GPS to convert coordinates
+            # Calling transform_crs() method to convert coordinates
             else :
-                print("Data point with x,y other than EPSG:4326. Calling transform_GPS() method...")
-                transformed = self.transform_GPS()
+                print("Data point with x,y other than EPSG:4326. Calling transform_crs() method...")
+                transformed = self.transform_crs()
                 single_pt_clim_data = {
                     'id' : transformed.id,
                     'epsg' : transformed.epsg,
@@ -328,10 +328,10 @@ class CrsDataPoint :
                 print("Done!")
                 return single_pt_clim_data
 
-            # Calling transform_GPS to convert coordinates
+            # Calling transform_crs() method to convert coordinates
             else :
-                print("Data point with x,y other than EPSG:4326. Calling transform_GPS() method...")
-                transformed = self.transform_GPS()
+                print("Data point with x,y other than EPSG:4326. Calling transform_crs() method...")
+                transformed = self.transform_crs()
                 single_pt_clim_data = {
                     'id' : transformed.id,
                     'epsg' : transformed.epsg,
@@ -362,7 +362,6 @@ class CrsDataPoint :
             raise ValueError("Enter the dataset you want to extract the climate data from : \"chelsa\" or \"worldclim\"") 
 
 
-    #TODO FIGURE OUT HOW TO IMPLEMENT NON-CLASS METHOD AS FUNC
     def trim_extracted_data(full_clim_data_dict):
         """
         Method that trims the extracted climate data dictionnary and returns a simplified version with essential data only
