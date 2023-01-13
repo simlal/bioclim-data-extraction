@@ -367,43 +367,27 @@ class CrsDataPoint :
             raise ValueError("Enter the dataset you want to extract the climate data from : \"chelsa\" or \"worldclim\"") 
 
 
-    def trim_extracted_data(full_clim_data_dict):
-        """
-        Method that trims the extracted climate data dictionnary and returns a simplified version with essential data only
+def trim_data(full_bioclim_data):
+    """
+    Function that trims the extracted climate data dictionnary and returns a simplified version with essential data only
 
-        Parameters
-        ----------
-        full_extracted_data : dictionnary
-            Dictionnary containing the full climate data obtained with the single_specimen_extraction() method
+    Parameters
+    ----------
+    full_bioclim_data : dictionnary
+        Dictionnary containing the full climate data obtained with the single_specimen_extraction() method
 
-        Returns
-        -------
-        Trimmed down version of the extracted climate data dictionnary
+    Returns
+    -------
+    Trimmed down version of the extracted climate data dictionnary
 
-        >>>
-        
-        """
-        # Return all keys from dict
-        all_keys = [k for k in full_clim_data_dict.keys()]
-        # Filter for columns with corrected climate data (bio# (Unit) key) + append to id,epsg,lon,lat cols
-        filtered_keys = all_keys[:4] + [key for key in all_keys[4:] if re.search("bio[0-9]* ", key)]
-
-        # Extract filtered keys from full climate data dict
-        light_clim_data_dict = dict((k, full_clim_data_dict[k]) for k in filtered_keys if k in full_clim_data_dict)
-        return light_clim_data_dict
+    >>>
     
-    # def get_climate():
-    #     """
-    #     A method to extract the corrected value for the wanted raster dataset. Will output multiple climate variables on demand.
+    """
+    # Return all keys from dict
+    all_keys = [k for k in full_bioclim_data.keys()]
+    # Filter for columns with corrected climate data (bio# (Unit) key) + append to id,epsg,lon,lat cols
+    filtered_keys = all_keys[:4] + [key for key in all_keys[4:] if re.search("bio[0-9]* ", key)]
 
-    #     Parameters
-    #     ----------
-    #     ? : ?
-
-    #     Returns
-    #     -------
-    #     A dataframe with the sample id, lon(x) (in EPSG:4326), lat(y) (in EPSG:4326) and the corrected value extracted climatic data.
-    #     Multiple or all climatic values can be returned in the same dataframe if desired.
-    #     """        
-
-
+    # Extract filtered keys from full climate data dict
+    light_clim_data_dict = dict((k, full_bioclim_data[k]) for k in filtered_keys if k in full_bioclim_data)
+    return light_clim_data_dict
