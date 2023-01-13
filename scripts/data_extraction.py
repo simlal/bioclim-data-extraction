@@ -1,3 +1,4 @@
+import os
 import rasterio
 from rasterio import sample
 from rasterio.crs import CRS
