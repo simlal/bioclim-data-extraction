@@ -212,7 +212,7 @@ class CrsDataPoint :
                 crs_data_points[row['id']] = CrsDataPoint(row['id'], row['epsg'], row['x'], row['y'])
             return crs_data_points
 
-    def single_specimen_extraction(self, dataset):
+    def extract_bioclim_elev(self, dataset):
         """
         Extracts the pixel values from the specified GeoTIFF file. Calls transform_crs() method if needed. 
         
@@ -228,7 +228,7 @@ class CrsDataPoint :
         bio#_longname : Name of the measurement, bio#_explanation : Brief explanation of measurement.
 
         >>> sherby = CrsDataPoint('Sherbrooke', epsg=4326, x=-71.890068, y=45.393869) 
-        >>> sherby_chelsa = sherby.single_specimen_extraction(dataset='chelsa')
+        >>> sherby_chelsa = sherby.extract_bioclim_elev(dataset='chelsa')
         Extracting values for Sherbrooke at lon=-71.890 lat=45.394  for all climate variables bio1 to bio19 in CHELSA V2.1 (1981-2010)  + elevation from WorldClim 2.1 dataset...
         Done!
         >>> import pandas as pd
@@ -375,7 +375,7 @@ def trim_data(full_bioclim_data):
     Parameters
     ----------
     full_bioclim_data : dictionnary
-        Dictionnary containing the full climate data obtained with the single_specimen_extraction() method
+        Dictionnary containing the full climate data obtained with the extract_bioclim_elev() method
 
     Returns
     -------
