@@ -1,9 +1,9 @@
 # Paths for bioclim_download.py
 url-files:
-  chelsa: "./data/chelsa_bioclim19_S3paths.txt"
-  worldclim: "./data/worldclim_bioclim19_30s_path.txt"
-  test: "./data/test.txt"
-download-path: "./data/"
+  chelsa: "./data/urls/chelsa_bioclim19_S3paths.txt"
+  worldclim: "./data/urls/worldclim_bioclim19_30s_path.txt"
+  test: "./data/urls/test.txt"
+download-path: "./data/bioclim/"
 
 # Chelsa V2.1 dataset parameters
 chelsa_data:
