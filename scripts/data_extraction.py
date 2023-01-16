@@ -1,4 +1,4 @@
-import os
+from pathlib import Path
 import rasterio
 from rasterio import sample
 from rasterio.crs import CRS
@@ -10,10 +10,11 @@ import pandas as pd
 import yaml
 import re
 
-# List of all EPSG reference codes
-EPSG_codes = [int(code) for code in pyproj.get_codes('EPSG', 'CRS')]
+# Path references for src and data files
+#TODO pathlib implement
  
 # Reference to config.YAML containing metadata from https://chelsa-climate.org/bioclim/ 
+#TODO change ref using pathlib
 with open('./scripts/config.yaml') as f:
     cfg = yaml.safe_load(f)
 
@@ -22,6 +23,8 @@ chelsa_data = cfg['chelsa_data']        # Nested dicts of Chelsa metadata
 worldclim_data = cfg['worldclim_data']      # Nested dicts of Worldclim metadata
 worldclim_elev = cfg['worldclim_data']['elevation']     # Worldclim elevation dict of params
 
+# List of all EPSG reference codes
+EPSG_codes = [int(code) for code in pyproj.get_codes('EPSG', 'CRS')]
 
 class CrsDataPoint :
     """
@@ -57,7 +60,7 @@ class CrsDataPoint :
     extract_bioclim_elev(dataset):
         Extracts the pixel values from the specified GeoTIFF file. Calls transform_crs() method if needed.
     """
-    
+
     def __init__(self, id, epsg, x, y,) :
         """
         Constructor for CrsDataPoint object.
