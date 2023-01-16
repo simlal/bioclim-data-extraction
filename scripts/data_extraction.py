@@ -44,7 +44,7 @@ class CrsDataPoint :
 
     Methods
     -------
-    __str__():
+    get_info():
         Prints the CrsDataPoint information
 
     transform_crs(epsg_out):
@@ -117,7 +117,7 @@ class CrsDataPoint :
             self._y = value 
 
     
-    def __str__(self) :
+    def get_info(self) :
         """
         Prints the CrsDataPoint object information. 
         """
