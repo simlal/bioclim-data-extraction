@@ -16,7 +16,6 @@ scr_dir = Path("./scripts/")
 
  
 # Reference to config.YAML containing metadata from https://chelsa-climate.org/bioclim/ 
-#TODO change ref using pathlib
 with open(scr_dir / "config.yaml") as f:
     cfg = yaml.safe_load(f)
 
@@ -36,8 +35,10 @@ class CrsDataPoint :
 
     Attributes
     ----------
+    all : list
+        list of all the instances of CrsDataPoint created
     id : str
-        identifier of single data point
+        identifier of single specimen data point
     epsg : int
         EPSG Geodetic Parameter Dataset code of the coordinate reference system (CRS)
     x : float
@@ -49,6 +50,9 @@ class CrsDataPoint :
 
     Methods
     -------
+    __repr__():
+        Lists all of created instances of CrsDataPoint objects
+
     get_info():
         Prints the CrsDataPoint information
 
@@ -62,6 +66,8 @@ class CrsDataPoint :
     extract_bioclim_elev(dataset):
         Extracts the pixel values from the specified GeoTIFF file. Calls transform_crs() method if needed.
     """
+
+    all = []
 
     def __init__(self, id, epsg, x, y,) :
         """
@@ -82,6 +88,7 @@ class CrsDataPoint :
 
         Examples
         --------
+        Create an instance for a single specimen:
         >>> from data_extraction import CrsDataPoint
         >>> sherby = CrsDataPoint('Sherbrooke', epsg=4326, x=-71.890068, y=45.393869)
         >>> print(sherby)
@@ -91,13 +98,21 @@ class CrsDataPoint :
             x = -71.890068
             y = 45.393869
             (x,y) = (-71.890068, 45.393869)
-        
+
+        List all created instances:
+        >>> sherby = CrsDataPoint('Sherbrooke', epsg=3857, x=-8002765.769038227, y=5683742.6823244635)
+        >>> paris = CrsDataPoint('Paris', epsg=4236, x=2.346963, y=48.858885)
+        >>> print(CrsDataPoint.all)
+        [CrsDataPoint(Sherbrooke, epsg=3857, x=-8002765.769038227, y=5683742.6823244635, CrsDataPoint(Paris, epsg=4236, x=2.346963, y=48.858885]
         """
         self.id = id
         self.epsg = epsg
         self.x = x
         self.y = y
         self.xy_pt = (self.x, self.y)
+
+        # Append each instance of CrsDataPoint to all list upon creation
+        CrsDataPoint.all.append(self)
 
     @property
     def epsg(self) :
@@ -128,8 +143,10 @@ class CrsDataPoint :
         else : 
             self._y = value 
 
-    
-    def get_info(self) :
+    def __repr__(self):
+        return f"CrsDataPoint({self.id}, epsg={self.epsg}, x={self.x}, y={self.y}"
+            
+    def get_info(self):
         """
         Prints the CrsDataPoint object information. 
         """
@@ -138,8 +155,7 @@ class CrsDataPoint :
             .format(self.id, self.epsg, self.x, self.y, self.xy_pt)
             )
 
-    
-    def transform_crs(self, epsg_out=4326) :
+    def transform_crs(self, epsg_out=4326):
         """
         Transforms the coordinates to the desired EPSG coordinate reference system. 
         Default argument is EPSG:4326 which is the reference for the WorldClim and Chelsa datasets
