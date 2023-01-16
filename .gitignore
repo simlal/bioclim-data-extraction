@@ -1,4 +1,4 @@
-data/test.txt
+data/urls/test.txt
 scripts/test.ipynb
 test.py
 *.tif
@@ -6,4 +6,3 @@ test.py
 scripts/__pycache__
 requirements.txt
 data/cities.csv
-data/states.csv
