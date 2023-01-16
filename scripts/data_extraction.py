@@ -193,8 +193,8 @@ class CrsDataPoint :
         """
         Prints the CrsDataPoint object information. 
         """
-        return(
-            "id : {}\nEPSG : {}\nMap coordinates :\n\tx = {}\n\ty = {}\n\t(x,y) = {}\n"
+        return print(
+            "id : {}\nEPSG : {}\nMap coordinates :\n\tx = {}\n\ty = {}\n\t(x,y) = {}"
             .format(self.id, self.epsg, self.x, self.y, self.xy_pt)
             )
 
