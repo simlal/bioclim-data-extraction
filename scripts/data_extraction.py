@@ -10,7 +10,7 @@ import re
 import pandas as pd
 
 # Path references for src and data files
-data_dir = Path("./data/")
+data_dir = Path("./data/bioclim/")
 scr_dir = Path("./scripts/")
 
  
@@ -187,7 +187,7 @@ class CrsDataPoint :
             self._y = value 
 
     def __repr__(self):
-        return f"CrsDataPoint({self.id}, epsg={self.epsg}, x={self.x}, y={self.y}"
+        return f"CrsDataPoint({self.id}, epsg={self.epsg}, x={self.x}, y={self.y})"
             
     def get_info(self):
         """
@@ -515,7 +515,7 @@ def extract_multiple_bioclim_elev(specimens, dataset, *, trimmed=True):
 
     >>> csv_file = Path("./data/cities.csv")
     >>> data = CrsDataPoint.load_csv(csv_file)
-    
+
     >>> df_trimmed = extract_multiple_bioclim_elev(data, 'worldclim', trimmed=True)
     Data point with x,y other than EPSG:4326. Calling transform_crs() method...
     ...than extracting values for sherby_transformed at lon=-71.890 lat=45.394 for all climate variables bio1 to bio19 + elevation in WorldClim V2.1 (1970-2000)...
