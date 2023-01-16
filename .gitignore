@@ -5,3 +5,4 @@ test.py
 *.zip
 scripts/__pycache__
 requirements.txt
+data/cities.csv
