@@ -464,7 +464,7 @@ def trim_data(full_bioclim_data):
     >>> sherby_chelsa = sherby.extract_bioclim_elev('chelsa')
     Extracting values for Sherbrooke at lon=-71.890 lat=45.394  for all climate variables bio1 to bio19 in CHELSA V2.1 (1981-2010)  + elevation from WorldClim 2.1 dataset...
     Done!
-    
+
     >>> from scripts.data_extraction import trim_data
     >>> sherby_trimmed = trim_data(sherby_chelsa)
     >>> print(sherby_trimmed)
@@ -477,5 +477,5 @@ def trim_data(full_bioclim_data):
     filtered_keys = all_keys[:4] + [key for key in all_keys[4:] if re.search("bio[0-9]* ", key)]
 
     # Extract filtered keys from full climate data dict
-    light_clim_data_dict = dict((k, full_bioclim_data[k]) for k in filtered_keys if k in full_bioclim_data)
-    return light_clim_data_dict
+    trimmed_clim_data_dict = dict((k, full_bioclim_data[k]) for k in filtered_keys if k in full_bioclim_data)
+    return trimmed_clim_data_dict
