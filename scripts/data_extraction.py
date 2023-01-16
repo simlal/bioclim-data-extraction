@@ -459,7 +459,16 @@ def trim_data(full_bioclim_data):
 
     Examples
     --------
-    >>>
+    >>> from scripts.data_extraction import CrsDataPoint
+    >>> sherby = CrsDataPoint('Sherbrooke', epsg=4326, x=-71.890068, y=45.393869)
+    >>> sherby_chelsa = sherby.extract_bioclim_elev('chelsa')
+    Extracting values for Sherbrooke at lon=-71.890 lat=45.394  for all climate variables bio1 to bio19 in CHELSA V2.1 (1981-2010)  + elevation from WorldClim 2.1 dataset...
+    Done!
+    
+    >>> from scripts.data_extraction import trim_data
+    >>> sherby_trimmed = trim_data(sherby_chelsa)
+    >>> print(sherby_trimmed)
+    {'id': 'Sherbrooke', 'epsg': 4326, 'lon': -71.890068, 'lat': 45.393869, 'bio1 (Celcius)': 6.050000000000011, 'bio2 (Celcius)': 9.1, 'bio3 (Celcius)': 23.400000000000002, 'bio4 (Celcius/100)': 1020.1, 'bio5 (Celcius)': 24.250000000000057, 'bio6 (Celcius)': -14.749999999999943, 'bio7 (Celcius)': 39.0, 'bio8 (Celcius)': 18.650000000000034, 'bio9 (Celcius)': -6.449999999999989, 'bio10 (Celcius)': 18.650000000000034, 'bio11 (Celcius)': -7.649999999999977, 'bio12 (kg / m**2 / year)': 1188.5, 'bio13 (kg / m**2 / month)': 129.4, 'bio14 (kg / m**2 / month)': 65.4, 'bio15 (kg / m**2)': 19.6, 'bio16 (kg / m**2 / month)': 375.8, 'bio17 (kg / m**2 / month)': 219.4, 'bio18 (kg / m**2 / month)': 375.8, 'bio19 (kg / m**2 / month)': 243.0}
     
     """
     # Return all keys from dict
