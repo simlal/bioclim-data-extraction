@@ -11,11 +11,13 @@ import yaml
 import re
 
 # Path references for src and data files
-#TODO pathlib implement
+data_dir = Path("./data/")
+scr_dir = Path("./scripts/")
+
  
 # Reference to config.YAML containing metadata from https://chelsa-climate.org/bioclim/ 
 #TODO change ref using pathlib
-with open('./scripts/config.yaml') as f:
+with open(scr_dir / "config.yaml") as f:
     cfg = yaml.safe_load(f)
 
 # YAML shorthand refs
@@ -270,7 +272,7 @@ class CrsDataPoint :
                     " + elevation from WorldClim 2.1 dataset..."
                 ) 
                 for k,v in chelsa_data.items() :
-                    with rasterio.open("./data/"+v['filename']) as tiff :
+                    with rasterio.open(data_dir / v['filename']) as tiff :
                         pixel_val = rasterio.sample.sample_gen(tiff, [self.xy_pt])    # Extracting raw pixel value
                         for val in pixel_val :
                             single_pt_clim_data[k+' ('+v['unit']+')'] = val[0]*v['scale']+v['offset']
@@ -278,7 +280,7 @@ class CrsDataPoint :
                             single_pt_clim_data[k+"_explanation"] = v['explanation']
                 
                 # Extract elevation data
-                with rasterio.open("./data/"+worldclim_elev['filename']) as tiff :
+                with rasterio.open(data_dir / worldclim_elev['filename']) as tiff :
                     pixel_val = rasterio.sample.sample_gen(tiff, [self.xy_pt])
                     for val in pixel_val :
                         single_pt_clim_data[worldclim_elev['name']+"_"+worldclim_elev['unit']] = val[0]
@@ -302,7 +304,7 @@ class CrsDataPoint :
                     " + elevation in WorldClim 2.1 dataset..."
                 )
                 for k,v in chelsa_data.items() :
-                    with rasterio.open("./data/"+v['filename']) as tiff :
+                    with rasterio.open(data_dir / v['filename']) as tiff :
                         pixel_val = rasterio.sample.sample_gen(tiff, [transformed.xy_pt])    # Extracting raw pixel value
                         for val in pixel_val :
                             single_pt_clim_data[k+' ('+v['unit']+')'] = val[0]*v['scale']+v['offset']
@@ -310,7 +312,7 @@ class CrsDataPoint :
                             single_pt_clim_data[k+"_explanation"] = v['explanation']
                     
                 # Extract elevation data
-                with rasterio.open("./data/"+worldclim_elev['filename']) as tiff :
+                with rasterio.open(data_dir / worldclim_elev['filename']) as tiff :
                     pixel_val = rasterio.sample.sample_gen(tiff, [transformed.xy_pt])
                     for val in pixel_val :
                         single_pt_clim_data[worldclim_elev['name']+"_"+worldclim_elev['unit']] = val[0]
@@ -334,7 +336,7 @@ class CrsDataPoint :
                     " + elevation in WorldClim 2.1 (1970-2000) dataset..."
                 ) 
                 for k,v in worldclim_data.items() :
-                    with rasterio.open("./data/"+v['filename']) as tiff :
+                    with rasterio.open(data_dir / v['filename']) as tiff :
                         pixel_val = rasterio.sample.sample_gen(tiff, [self.xy_pt])    # Extracting raw pixel value
                         for val in pixel_val :
                             single_pt_clim_data[k+' ('+v['unit']+')'] = val[0]
@@ -342,7 +344,7 @@ class CrsDataPoint :
                             single_pt_clim_data[k+"_explanation"] = v['explanation']
                     
                     # Extract elevation data
-                with rasterio.open("./data/"+worldclim_elev['filename']) as tiff :
+                with rasterio.open(data_dir / worldclim_elev['filename']) as tiff :
                     pixel_val = rasterio.sample.sample_gen(tiff, [self.xy_pt])
                     for val in pixel_val :
                         single_pt_clim_data[worldclim_elev['name']+"_"+worldclim_elev['unit']] = val[0]
@@ -365,7 +367,7 @@ class CrsDataPoint :
                     "for all climate variables bio1 to bio19 + elevation in WorldClim V2.1 (1970-2000)..."
                 )
                 for k,v in worldclim_data.items() :
-                    with rasterio.open("./data/"+v['filename']) as tiff :
+                    with rasterio.open(data_dir / v['filename']) as tiff :
                         pixel_val = rasterio.sample.sample_gen(tiff, [transformed.xy_pt])    # Extracting raw pixel value
                         for val in pixel_val :
                             single_pt_clim_data[k+' ('+v['unit']+')'] = val[0]
@@ -373,7 +375,7 @@ class CrsDataPoint :
                             single_pt_clim_data[k+"_explanation"] = v['explanation']
                     
                     # Extract elevation data
-                with rasterio.open("./data/"+worldclim_elev['filename']) as tiff :
+                with rasterio.open(data_dir / worldclim_elev['filename']) as tiff :
                     pixel_val = rasterio.sample.sample_gen(tiff, [transformed.xy_pt])
                     for val in pixel_val :
                         single_pt_clim_data[worldclim_elev['name']+"_"+worldclim_elev['unit']] = val[0]
