@@ -6,3 +6,4 @@ test.py
 scripts/__pycache__
 requirements.txt
 data/cities.csv
+data/states.csv
