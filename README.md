@@ -23,32 +23,75 @@ Data at 1 km<sup>2</sup> resolution for all 19 BIOCLIM vars/ <img src="https://c
 
 ## Installation
 ### Requirements
-TODO: create requirements.txt
+For full requirements see below. Uses mainly **python 3** with the following main libraries:
+- rasterio
+- pyproj
+- pandas
 
 ### Linux-based systems
-1. **Create a new conda environement**
+**Clone the repo**
+``` bash
+git clone git@github.com:simlal/bioclim-data-extraction.git
+cd bioclim-data-extraction
+```
+**Create a new conda environement**
 
-`conda create --name bioclim --file requirements.txt`
+``` bash
+conda create --name bioclim --file requirements.txt
+conda activate bioclim
+```
+There are some unused dependencies in there, but there are some intricacies regarding compatible versions of *rasterio* and *pyproj* so just go ahead and use the requirements.txt
 
-2. Activate the environement
-
-`conda activate bioclim`
-
-3. Clone the repo
-
-    1. `git clone git@github.com:simlal/bioclim-data-extraction.git`
-    2. `cd bioclim-data-extraction`
+**Dir structure**
+``` bash
+.
+├── data
+│   ├── bioclim
+│   ├── specs
+│   │   ├── anuclim61.pdf
+│   │   └── CHELSA_tech_specification_V2.pdf
+│   ├── states.csv
+│   └── urls
+│       ├── chelsa_bioclim19_S3paths.txt
+│       └── worldclim_bioclim19_30s_path.txt
+├── scripts
+│   ├── config.yaml
+│   ├── data_extraction.py
+│   ├── download.py
+│   ├── __init__.py
+├──requirements.txt
+└── run.py
+```
 
 ## Download data
 
-***Steps :***
+### With wget
+```bash
+mkdir data/bioclim/
+wget -i data/urls/chelsa_bioclim19_S3paths.txt -P data/bioclim/
+wget -i data/urls/worldclim_bioclim19_30s_path.txt -P data/bioclim/
+```
+
+### Directly with Python
+**Steps**
 
 1. Run **bioclim_download.py** from the command line
 
-`python bioclim_download.py`
+```bash
+python scripts/download.py
+```
+```
+chelsa : for Chelsa bioclim19 dataset 
+worldclim : for WorldClim bioclim19 dataset 
+both : for Chelsa and WorldClim bioclim datasets 
 
-2. To be continued...
+Enter which dataset(s) you would like to download.
+```
 
-## Extract data
+2. Enter dataset will start the download
 
-Scripts + Examples
+There will be some infographics about the progress and speed of the download within the terminal. Note that the download will proceed by chunks.
+
+## Extract data for bioclim 1 to 19 + elevation variables
+
+### For a single data point
