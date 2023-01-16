@@ -4,5 +4,4 @@ test.py
 *.tif
 *.zip
 scripts/__pycache__
-requirements.txt
 data/cities.csv
