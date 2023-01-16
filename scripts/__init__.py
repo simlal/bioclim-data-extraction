@@ -1,1 +1,1 @@
-from scripts
+from .data_extraction import CrsDataPoint
