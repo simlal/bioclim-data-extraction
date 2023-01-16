@@ -1,4 +1,5 @@
 from pathlib import Path
+import csv
 import rasterio
 from rasterio import sample
 from rasterio.crs import CRS
@@ -50,6 +51,9 @@ class CrsDataPoint :
 
     Methods
     -------
+    load_csv(csvfile):
+        Instantiate CrsDataPoint objects into a list by parsing a csv file containing the attributes.
+
     __repr__():
         Lists all of created instances of CrsDataPoint objects
 
@@ -114,6 +118,42 @@ class CrsDataPoint :
         # Append each instance of CrsDataPoint to all list upon creation
         CrsDataPoint.all.append(self)
 
+    @classmethod
+    def load_csv(cls, csvfile):
+        """
+        Instantiate CrsDataPoint objects into a list by parsing a csv file containing the attributes.
+
+        Parameters
+        ----------
+        csvfile : .csv
+            .csv file containing attributes for CrsDataPoint. Header be included and follow this order : 
+            id, epsg, x, y,
+
+        Returns
+        -------
+        [CrsDataPoint(id,epsg,x,y)] : list
+            List of all CrsDataPoint instances created from the csv file containing data. 
+        
+
+        Examples
+        --------
+        >>> from scripts.data_extraction import CrsDataPoint
+        >>> from pathlib import Path
+        >>> csv_file = Path("./data/cities.csv")
+        >>> data = CrsDataPoint.load_csv(csv_file)
+        >>> print(data)
+        [CrsDataPoint(sherby, epsg=3857, x=-8002765.769038227, y=5683742.6823244635, CrsDataPoint(paris, epsg=4326, x=2.346963, y=48.858885]
+        """
+        with open(csvfile, 'r') as file:
+            reader = csv.DictReader(file)
+            # Loop through csv and instantiate objects with proper types
+            return [CrsDataPoint(
+                id = row['id'],
+                epsg = int(row['epsg']),
+                x = float(row['x']),
+                y = float(row['y']))
+                for row in reader]
+
     @property
     def epsg(self) :
         return self._epsg
@@ -126,8 +166,13 @@ class CrsDataPoint :
 
     @epsg.setter
     def epsg(self, value):
+        if not isinstance(value, int):
+            raise TypeError("EPSG code must be an integer.")
         if value not in EPSG_codes :
-            raise ValueError("Not a valid EPSG code. Use int associated with EPSG codes")   
+            raise ValueError(
+                "Input EPSG code not valid, ",
+                "see https://pyproj4.github.io/pyproj/stable/api/database.html#pyproj.database.get_codes"
+            )   
         else :
             self._epsg = value
     @x.setter
