@@ -11,6 +11,8 @@ Historical data range :
 
 Data at 1 km<sup>2</sup> resolution for all 19 BIOCLIM vars <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="16px"><!-- Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) --><path d="M510.5 225.5c-6.9-37.2-39.3-65.5-78.5-65.5-12.3 0-23.9 3-34.3 8-17.4-24.1-45.6-40-77.7-40-53 0-96 43-96 96 0 .5.2 1.1.2 1.6C187.6 233 160 265.2 160 304c0 44.2 35.8 80 80 80h256c44.2 0 80-35.8 80-80 0-39.2-28.2-71.7-65.5-78.5zm-386.4 34.4c-37.4-37.4-37.4-98.3 0-135.8 34.6-34.6 89.1-36.8 126.7-7.4 20-12.9 43.6-20.7 69.2-20.7.7 0 1.3.2 2 .2l8.9-26.7c3.4-10.2-6.3-19.8-16.5-16.4l-75.3 25.1-35.5-71c-4.8-9.6-18.5-9.6-23.3 0l-35.5 71-75.3-25.1c-10.2-3.4-19.8 6.3-16.4 16.5l25.1 75.3-71 35.5c-9.6 4.8-9.6 18.5 0 23.3l71 35.5-25.1 75.3c-3.4 10.2 6.3 19.8 16.5 16.5l59.2-19.7c-.2-2.4-.7-4.7-.7-7.2 0-12.5 2.3-24.5 6.2-35.9-3.6-2.7-7.1-5.2-10.2-8.3zm69.8-58c4.3-24.5 15.8-46.4 31.9-64-9.8-6.2-21.4-9.9-33.8-9.9-35.3 0-64 28.7-64 64 0 18.7 8.2 35.4 21.1 47.1 11.3-15.9 26.6-28.9 44.8-37.2zm330.6 216.2c-7.6-4.3-17.4-1.8-21.8 6l-36.6 64c-4.4 7.7-1.7 17.4 6 21.8 2.5 1.4 5.2 2.1 7.9 2.1 5.5 0 10.9-2.9 13.9-8.1l36.6-64c4.3-7.7 1.7-17.4-6-21.8zm-96 0c-7.6-4.3-17.4-1.8-21.8 6l-36.6 64c-4.4 7.7-1.7 17.4 6 21.8 2.5 1.4 5.2 2.1 7.9 2.1 5.5 0 10.9-2.9 13.9-8.1l36.6-64c4.3-7.7 1.7-17.4-6-21.8zm-96 0c-7.6-4.3-17.4-1.8-21.8 6l-36.6 64c-4.4 7.7-1.7 17.4 6 21.8 2.5 1.4 5.2 2.1 7.9 2.1 5.5 0 10.9-2.9 13.9-8.1l36.6-64c4.3-7.7 1.7-17.4-6-21.8zm-96 0c-7.6-4.3-17.4-1.8-21.8 6l-36.6 64c-4.4 7.7-1.7 17.4 6 21.8 2.5 1.4 5.2 2.1 7.9 2.1 5.5 0 10.9-2.9 13.9-8.1l36.6-64c4.3-7.7 1.7-17.4-6-21.8z"/></svg> https://www.worldclim.org/
 
+Metadata : bioclim-data-extraction/data/specs/anuclim61.pdf
+
 ### Chelsa - Climatologies at high resolution for the earth’s land surface areas (latest version V2.1)
 
 Latest publication : 
@@ -20,6 +22,8 @@ Historical data range :
 1981-2010
 
 Data at 1 km<sup>2</sup> resolution for all 19 BIOCLIM vars/ <img src="https://chelsa-climate.org/wp-content/uploads/2016/02/logotest3.gif" width="32px"> https://chelsa-climate.org
+
+Metadata : bioclim-data-extraction/data/specs/CHELSA_tech_specification_V2.pdf
 
 ## Installation
 ### Requirements
@@ -62,6 +66,7 @@ There are some unused dependencies in there, but there are some intricacies rega
 ├──requirements.txt
 └── run.py
 ```
+We will perform our data analysis from the main directory (i.e. run.py in this example)
 
 ## Download data
 
@@ -95,3 +100,40 @@ There will be some infographics about the progress and speed of the download wit
 ## Extract data for bioclim 1 to 19 + elevation variables
 
 ### For a single data point
+
+**Create a CrsDataPoint instance**
+```python
+>>> from scripts.data_extraction import CrsDataPoint
+
+>>> sherby_3857 = CrsDataPoint('Sherbrooke', epsg=3857, x=-8002765.769038227, y=5683742.6823244635)
+>>> sherby_3857.get_info()
+id : Sherbrooke
+EPSG : 3857
+Map coordinates :
+        x = -8002765.769038227
+        y = 5683742.6823244635
+        (x,y) = (-8002765.769038227, 5683742.6823244635)
+```
+
+**Transform to other EPSG if needed**
+```python
+>>> sherby_4236 = sherby_3857.transform_crs()    # default is 4326 (aka GPS)
+>>> sherby_gps.get_info()
+id : Sherbrooke_transformed
+EPSG : 4326
+Map coordinates :
+   x = -71.89006805555556
+   y = 45.39386888888889
+   (x,y) = (-71.89006805555556, 45.39386888888889)
+```
+Since both Worldclim and Chelsa db (GeoTIFF) are encoded with the EPSG:4326 coordinate reference system (crs), we need to convert the x/y coords to EPSG:4326.
+
+The method transform_crs() will be automatically called when encountering a non-"4326" object and convert the coordinates accordingly.
+
+**Extract bioclim 1 to 19 + elevation from worldclim datasets**
+```python
+method...
+```
+
+## Contact
+Feel free to contact me for any questions of feedback!
