@@ -5,9 +5,6 @@ from rasterio import sample
 from rasterio.crs import CRS
 import pyproj
 from pyproj import Transformer
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
 import yaml
 import re
 
