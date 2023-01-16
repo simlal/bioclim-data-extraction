@@ -4,6 +4,7 @@ import time
 from functools import partial
 from zipfile import ZipFile
 import os
+from pathlib import Path
 
 # Get urls from url-file
 def get_urls(urlfile):
@@ -84,12 +85,18 @@ def unzip_worldclim(download_path, biozip, elevzip) :
 if __name__ == "__main__" :
     
     # Load yaml and set vars
-    with open('./scripts/config.yaml') as f:
+    with open(Path('./scripts/config.yaml')) as f:
         config = yaml.safe_load(f)
     chelsa_urls = config["url-files"]["chelsa"]
     worldclim_urls = config["url-files"]["worldclim"]
     test_urls = config["url-files"]["test"]
     download_path = config["download-path"]
+
+    # Create bioclim harboring dir
+    try:
+        os.mkdir(download_path)
+    except OSError as error:
+        print(error)
 
     # Ask url-file input to download
     possible_answer = ["chelsa", "worldclim", "both"]
