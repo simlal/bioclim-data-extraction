@@ -367,7 +367,7 @@ class CrsDataPoint :
         else :
             raise ValueError("Enter the dataset you want to extract the climate data from : \"chelsa\" or \"worldclim\"") 
 
-
+# Trim data dict with base CrsDataPoint attributes (may be crs_transformed) + bioclim_elev values
 def trim_data(full_bioclim_data):
     """
     Function that trims the extracted climate data dictionnary and returns a simplified version with essential data only
