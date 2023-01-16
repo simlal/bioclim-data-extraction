@@ -7,6 +7,7 @@ import pyproj
 from pyproj import Transformer
 import yaml
 import re
+import pandas as pd
 
 # Path references for src and data files
 data_dir = Path("./data/")
@@ -288,7 +289,7 @@ class CrsDataPoint :
 
     def extract_bioclim_elev(self, dataset):
         """
-        Extracts the pixel values from the specified GeoTIFF file. Calls transform_crs() method if needed. 
+        Extracts the pixel values (for all bioclim variables) from the specified GeoTIFF file. Calls transform_crs() method if needed. 
         
 
         Parameters
@@ -446,7 +447,7 @@ class CrsDataPoint :
 # Trim data dict with base CrsDataPoint attributes (may be crs_transformed) + bioclim_elev values
 def trim_data(full_bioclim_data):
     """
-    Function that trims the extracted climate data dictionnary and returns a simplified version with essential data only
+    Function that trims the extracted climate data dictionnary and returns a simplified version with essential data only.
 
     Parameters
     ----------
@@ -474,8 +475,74 @@ def trim_data(full_bioclim_data):
     # Return all keys from dict
     all_keys = [k for k in full_bioclim_data.keys()]
     # Filter for columns with corrected climate data (bio# (Unit) key) + append to id,epsg,lon,lat cols
-    filtered_keys = all_keys[:4] + [key for key in all_keys[4:] if re.search("bio[0-9]* ", key)]
+    filtered_keys = (
+        all_keys[:4] + 
+        [key for key in all_keys[4:] if re.search("bio[0-9]* ", key)] + 
+        [worldclim_elev['name']+"_"+worldclim_elev['unit']]
+    )
 
     # Extract filtered keys from full climate data dict
     trimmed_clim_data_dict = dict((k, full_bioclim_data[k]) for k in filtered_keys if k in full_bioclim_data)
     return trimmed_clim_data_dict
+
+def extract_multiple_bioclim_elev(specimens, dataset, *, trimmed=True):
+    """
+    Function that extracts the pixel values (for all bioclim variables) from the specified GeoTIFF file for the desired dataset.
+    Calls the extract_bioclim_elev() (thus possibly transform_crs()) method(s) and trim_data() function.
+
+    Parameters
+    ----------
+    specimens : list
+        List of the CrsDataPoint objects to extract the value of. Can be generated using the load_csv() @classmethod.
+
+    dataset : str
+        Name of the dataset to extract the data from : "chelsa" or "worldclim".
+
+    trimmed : bool
+        Sets the amount of details to include in the returned dataframe following the extraction of the data.
+        If false, will return the a dataframe with all columns as the output of the extract_bioclim_elev() method.
+        If true, will return a trimmed dataframe with only the necessary extracted values + specimen information. (Default = True)
+
+    Returns
+    -------
+    df : pandas DataFrame
+        .csv file containing the CrsDataPoint object informations, possible epsg transformation and the extracted, corrected (scale + offset) values for all bioclim vars + elevation
+    
+    Example
+    >>> from scripts.data_extraction import CrsDataPoint
+    >>> from scripts.data_extraction import extract_multiple_bioclim_elev
+    >>> from pathlib import Path
+
+    >>> csv_file = Path("./data/cities.csv")
+    >>> data = CrsDataPoint.load_csv(csv_file)
+    
+    >>> df_trimmed = extract_multiple_bioclim_elev(data, 'worldclim', trimmed=True)
+    Data point with x,y other than EPSG:4326. Calling transform_crs() method...
+    ...than extracting values for sherby_transformed at lon=-71.890 lat=45.394 for all climate variables bio1 to bio19 + elevation in WorldClim V2.1 (1970-2000)...
+    Extracting values for paris at lon=2.347 lat=48.859  for all climate variables bio1 to bio19  + elevation in WorldClim 2.1 (1970-2000) dataset...
+    Done!
+    >>> print(df_trimmed)
+                    id  epsg        lon  ...  bio18 (kg / m**2 / month)  bio19 (kg / m**2 / month)  elevation_Meters
+    0  sherby_transformed  4326 -71.890068  ...                      352.0                      195.0               158
+    1               paris  4326   2.346963  ...                      165.0                      160.0                47
+
+    [2 rows x 24 columns]
+ 
+    """
+    
+    # Get list of dictionnaries containing each CrsDataPoint info + full extracted bioclim/elev values
+    multiple_specimens_full = [single_specimen.extract_bioclim_elev(dataset) for single_specimen in specimens]
+    
+    # Full attribute dataframe
+    if trimmed == True:
+        multiple_specimens_trimmed = list(map(trim_data, multiple_specimens_full))
+        df_trimmed = pd.DataFrame(multiple_specimens_trimmed)
+        return df_trimmed        
+    # Trimmed dataframe by calling the trim_data() func
+    elif trimmed == False : 
+        df_full = pd.DataFrame(multiple_specimens_full)
+        return df_full
+    # Handle error
+    else :
+        raise TypeError("trimmed argument must be a bool") 
+    
