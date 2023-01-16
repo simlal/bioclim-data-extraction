@@ -51,8 +51,13 @@ class CrsDataPoint :
         Transforms the coordinates to the desired EPSG coordinate reference system
 
     df_to_dict(df):
-        XXXXX
+        Takes the input df and returns a dictionnary of CrsDataPoint objects.
+        Calls transform_crs() method if any epsg codes are not 4326.
+
+    extract_bioclim_elev(dataset):
+        Extracts the pixel values from the specified GeoTIFF file. Calls transform_crs() method if needed.
     """
+    
     def __init__(self, id, epsg, x, y,) :
         """
         Constructor for CrsDataPoint object.
@@ -70,6 +75,8 @@ class CrsDataPoint :
         xy_pt : tuple
             x,y values in tuple format
 
+        Examples
+        --------
         >>> from data_extraction import CrsDataPoint
         >>> sherby = CrsDataPoint('Sherbrooke', epsg=4326, x=-71.890068, y=45.393869)
         >>> print(sherby)
@@ -146,6 +153,8 @@ class CrsDataPoint :
         y_out : float
             latitude (y-value, East-West lines) that range between -90 and +90 degrees.
 
+        Examples
+        --------
         >>> sherby = CrsDataPoint('Sherbrooke', epsg=3857, x=-8002765.769038227, y=5683742.6823244635)
         >>> sherby_gps = sherby.transform_crs()
         >>> print(sherby_gps)
@@ -181,6 +190,8 @@ class CrsDataPoint :
         -------
         Dictionnary of CrsDataPoint objects
 
+        Examples
+        --------
         >>> df = pd.DataFrame({
         ...     'id' : ['Sherbrooke', 'Paris'],
         ...     'epsg' : [3857, 4326],
@@ -227,6 +238,8 @@ class CrsDataPoint :
         A dictionnary containing sample id, lon(x), lat(y), bio# (Unit) : Corrected (scale + offset where needed) pixel value,
         bio#_longname : Name of the measurement, bio#_explanation : Brief explanation of measurement.
 
+        Examples
+        --------
         >>> sherby = CrsDataPoint('Sherbrooke', epsg=4326, x=-71.890068, y=45.393869) 
         >>> sherby_chelsa = sherby.extract_bioclim_elev(dataset='chelsa')
         Extracting values for Sherbrooke at lon=-71.890 lat=45.394  for all climate variables bio1 to bio19 in CHELSA V2.1 (1981-2010)  + elevation from WorldClim 2.1 dataset...
@@ -381,6 +394,8 @@ def trim_data(full_bioclim_data):
     -------
     Trimmed down version of the extracted climate data dictionnary
 
+    Examples
+    --------
     >>>
     
     """
