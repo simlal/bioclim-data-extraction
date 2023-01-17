@@ -26,8 +26,9 @@ Data at 1 km<sup>2</sup> resolution for all 19 BIOCLIM vars/ <img src="https://c
 Metadata : bioclim-data-extraction/data/specs/CHELSA_tech_specification_V2.pdf
 
 ## Installation
+Use [conda](https://conda.io) to setup the python environment 
 ### Requirements
-For full requirements see below. Uses mainly **python 3** with the following main libraries:
+For full requirements see **requirements.txt**. Uses mainly **python > 3** with the following main libraries:
 - rasterio
 - pyproj
 - pandas
@@ -66,7 +67,7 @@ There are some unused dependencies in there, but there are some intricacies rega
 ├──requirements.txt
 └── run.py
 ```
-We will perform our data analysis from the main directory (i.e. run.py in this example)
+We will perform our data analysis from the main directory (i.e. run.py in this example).
 
 ## Download data
 
@@ -80,7 +81,7 @@ wget -i data/urls/worldclim_bioclim19_30s_path.txt -P data/bioclim/
 ### Directly with Python
 **Steps**
 
-1. Run **bioclim_download.py** from the command line
+1. Run **bioclim_download.py** from the command line.
 
 ```bash
 python scripts/download.py
@@ -93,7 +94,7 @@ both : for Chelsa and WorldClim bioclim datasets
 Enter which dataset(s) you would like to download.
 ```
 
-2. Enter dataset will start the download
+2. Entering dataset (or 'both') keyword will start the download.
 
 There will be some infographics about the progress and speed of the download within the terminal. Note that the download will proceed by chunks.
 
@@ -128,7 +129,7 @@ Map coordinates :
 ```
 Since both Worldclim and Chelsa db (GeoTIFF) are encoded with the EPSG:4326 coordinate reference system (crs), we need to convert the x/y coords to EPSG:4326.
 
-The method transform_crs() will be automatically called when encountering a non-"4326" object and convert the coordinates accordingly.
+The method `transform_crs()` will be automatically called when encountering a non-"4326" object and convert the coordinates accordingly.
 
 #### Extract bioclim 1 to 19 + elevation from Wordclim or Chelsa datasets
 Get values and relevant metadata
@@ -163,6 +164,58 @@ Done!
 [1 rows x 24 columns]
 
 ```
+---
+### For multiple data points from a csv file
+#### Instantiate from csv
+Use the `load_csv()` classmethod with a csv containing the CrsDataPoint attributes as header
+```python
+>>> from scripts.data_extraction import CrsDataPoint
+>>> from pathlib import Path
+
+# State centroid example
+>>> csv_file = Path("./data/states.csv")
+>>> data = CrsDataPoint.load_csv(csv_file)      # As list of CrsDataPoint objects
+
+# First 3 states
+>>> print(data[0:3])
+```
+We can check at anypoint the complete list of all instantiated objects with by using the `CrsDataPoint.all` attribute.
+
+**To extract the bioclim1 to 19 + elevation values for a given database**
+Calling the `extract_multiple_bioclim_elev(specimens_list, dataset, trimmed=True` function returns a dataframe (trimmed or exhaustive depending on *trimmed* arg).
+```python
+>>> from scripts.data_extraction import extract_multiple_bioclim_elev
+
+# Extract bioclim values for all states
+>>> df_trimmed = extract_multiple_bioclim_elev(data, 'worldclim', trimmed=True) # if False : full df
+Extracting values for Alaska at lon=-154.493 lat=63.589  for all climate variables bio1 to bio19  + elevation in WorldClim 2.1 (1970-2000) dataset...
+Done!
+Extracting values for Alabama at lon=-86.902 lat=32.318  for all climate variables bio1 to bio19  + elevation in WorldClim 2.1 (1970-2000) dataset...
+Done!
+...
+Extracting values for Wyoming at lon=-107.290 lat=43.076  for all climate variables bio1 to bio19  + elevation in WorldClim 2.1 (1970-2000) dataset...
+Done!
+
+# Checking the first five states
+>>> print(df_trimmed.head())
+           id  epsg         lon  ...  bio18 (kg / m**2 / month)  bio19 (kg / m**2 / month)  elevation_Meters
+0      Alaska  4326 -154.493062  ...                      208.0                       54.0               366
+1     Alabama  4326  -86.902298  ...                      319.0                      392.0                57
+2    Arkansas  4326  -91.831833  ...                      276.0                      306.0               136
+3     Arizona  4326 -111.093731  ...                      203.0                      166.0              1587
+4  California  4326 -119.417932  ...                        5.0                      195.0               149
+
+[5 rows x 24 columns]
+```
+
+**Then save to csv**
+```python
+>>> bioclim_out = data_dir / "states_bioclim.csv"
+>>> if not Path.is_file(bioclim_out):
+>>>     df_trimmed.to_csv(bioclim_out)
+```
+
+
 
 ## Contact
 Feel free to contact me for any questions of feedback!
