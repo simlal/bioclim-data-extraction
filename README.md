@@ -100,8 +100,8 @@ There will be some infographics about the progress and speed of the download wit
 ## Extract data for bioclim 1 to 19 + elevation variables
 
 ### For a single data point
-
-**Create a CrsDataPoint instance**
+Use directly with CrsDataPoint class from run.py 
+#### Create a CrsDataPoint instance
 ```python
 >>> from scripts.data_extraction import CrsDataPoint
 
@@ -115,7 +115,7 @@ Map coordinates :
         (x,y) = (-8002765.769038227, 5683742.6823244635)
 ```
 
-**Transform to other EPSG if needed**
+#### Transform to other EPSG if needed
 ```python
 >>> sherby_4236 = sherby_3857.transform_crs()    # default is 4326 (aka GPS)
 >>> sherby_gps.get_info()
@@ -130,9 +130,38 @@ Since both Worldclim and Chelsa db (GeoTIFF) are encoded with the EPSG:4326 coor
 
 The method transform_crs() will be automatically called when encountering a non-"4326" object and convert the coordinates accordingly.
 
-**Extract bioclim 1 to 19 + elevation from worldclim datasets**
+#### Extract bioclim 1 to 19 + elevation from Wordclim or Chelsa datasets
+Get values and relevant metadata
 ```python
-method...
+>>> from scripts.data_extraction import CrsDataPoint
+
+>>> sherby_3857 = CrsDataPoint('Sherbrooke', epsg=3857, x=-8002765.769038227, y=5683742.6823244635)
+>>> sherby_4236_chelsa = sherby_3857.extract_bioclim_elev(dataset='chelsa')     # As dictionary
+Data point with x,y other than EPSG:4326. Calling transform_crs() method...
+...than extracting values for Sherbrooke_transformed at lon=-71.890 lat=45.394  for all climate variables bio1 to bio19 in CHELSA V2.1 (1981-2010)  + elevation in WorldClim 2.1 dataset...
+Done!
+
+# Convert to DataFrame
+>>> import pandas as pd
+>>> sherby_bio_chelsa = pd.DataFrame([sherby_4236_chelsa])
+>>> with pd.option_context('display.max_colwidth', 15):
+    print(sherby_bio_chelsa)       # Output will vary base on terminal width
+               id  epsg        lon        lat  bio1 (Celcius)  ... bio19 (kg / m**2 / month)  bio19_longname  bio19_explanation elevation_Meters elevation_explanation
+0  Sherbrooke_...  4326 -71.890068  45.393869            6.05  ...           243.0            mean monthl...  The coldest...                158   Elevation i...      
+
+[1 rows x 63 columns]
+```
+**To get a leaner dataframe with only relevant class information + values**
+```python
+>>> from scripts.data_extraction import trim_data
+
+>>> sherby_bio_chelsa_trimmed = trim_data(sherby_4236_chelsa) # From full dict to trimmed dict
+>>> print(pd.DataFrame([sherby_bioclim_trimmed]))       # Display as df
+                       id  epsg        lon  ...  bio18 (kg / m**2 / month)  bio19 (kg / m**2 / month)  elevation_Meters
+0  Sherbrooke_transformed  4326 -71.890068  ...                      375.8                      243.0               158
+
+[1 rows x 24 columns]
+
 ```
 
 ## Contact
