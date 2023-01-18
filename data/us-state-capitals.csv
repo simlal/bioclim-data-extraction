@@ -1,0 +1,51 @@
+id,epsg,x,y
+Montgomery_Alabama,4326,-86.279118,32.361538
+Juneau_Alaska,4326,-134.41974,58.301935
+Phoenix_Arizona,4326,-112.073844,33.448457
+Little Rock_Arkansas,4326,-92.331122,34.736009
+Sacramento_California,4326,-121.468926,38.555605
+Denver_Colorado,4326,-104.984167,39.7391667
+Hartford_Connecticut,4326,-72.677,41.767
+Dover_Delaware,4326,-75.526755,39.161921
+Tallahassee_Florida,4326,-84.27277,30.4518
+Atlanta_Georgia,4326,-84.39,33.76
+Honolulu_Hawaii,4326,-157.826182,21.30895
+Boise_Idaho,4326,-116.237651,43.613739
+Springfield_Illinois,4326,-89.650373,39.78325
+Indianapolis_Indiana,4326,-86.147685,39.790942
+Des Moines_Iowa,4326,-93.620866,41.590939
+Topeka_Kansas,4326,-95.69,39.04
+Frankfort_Kentucky,4326,-84.86311,38.197274
+Baton Rouge_Louisiana,4326,-91.140229,30.45809
+Augusta_Maine,4326,-69.765261,44.323535
+Annapolis_Maryland,4326,-76.501157,38.972945
+Boston_Massachusetts,4326,-71.0275,42.2352
+Lansing_Michigan,4326,-84.5467,42.7335
+Saint Paul_Minnesota,4326,-93.094,44.95
+Jackson_Mississippi,4326,-90.207,32.32
+Jefferson City_Missouri,4326,-92.189283,38.572954
+Helena_Montana,4326,-112.027031,46.595805
+Lincoln_Nebraska,4326,-96.675345,40.809868
+Carson City_Nevada,4326,-119.753877,39.160949
+Concord_New Hampshire,4326,-71.549127,43.220093
+Trenton_New Jersey,4326,-74.756138,40.221741
+Santa Fe_New Mexico,4326,-105.964575,35.667231
+Albany_New York,4326,-73.781339,42.659829
+Raleigh_North Carolina,4326,-78.638,35.771
+Bismarck_North Dakota,4326,-100.779004,48.813343
+Columbus_Ohio,4326,-83.000647,39.962245
+Oklahoma City_Oklahoma,4326,-97.534994,35.482309
+Salem_Oregon,4326,-123.029159,44.931109
+Harrisburg_Pennsylvania,4326,-76.875613,40.269789
+Providence_Rhode Island,4326,-71.422132,41.82355
+Columbia_South Carolina,4326,-81.035,34
+Pierre_South Dakota,4326,-100.336378,44.367966
+Nashville_Tennessee,4326,-86.784,36.165
+Austin_Texas,4326,-97.75,30.266667
+Salt Lake City_Utah,4326,-111.892622,40.7547
+Montpelier_Vermont,4326,-72.57194,44.26639
+Richmond_Virginia,4326,-77.46,37.54
+Olympia_Washington,4326,-122.893077,47.042418
+Charleston_West Virginia,4326,-81.633294,38.349497
+Madison_Wisconsin,4326,-89.384444,43.074722
+Cheyenne_Wyoming,4326,-104.802042,41.145548
