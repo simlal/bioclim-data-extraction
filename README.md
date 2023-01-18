@@ -236,4 +236,4 @@ Example with bio1 selection from dropdown menu
 Example with elevation selection from dropdown menu
 ![elev](/viz_example/elev_scatter_example.png)
 ## Contact
-Feel free to contact me by [email](simlalonde@hotmail.com) or any other platform mentioned in my GitHub profile for any questions of feedback!
+Feel free to contact me by [email](mailto:simlalonde@hotmail.com) or any other platform mentioned in my GitHub profile for any questions of feedback!
