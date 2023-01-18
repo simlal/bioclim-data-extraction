@@ -175,11 +175,12 @@ Use the `load_csv()` classmethod with a csv containing the CrsDataPoint attribut
 >>> from pathlib import Path
 
 # State centroid example
->>> csv_file = Path("./data/states.csv")
+>>> csv_file = Path("./data/us-state-capitals.csv")
 >>> data = CrsDataPoint.load_csv(csv_file)      # As list of CrsDataPoint objects
 
-# First 3 states
+# First 3 capitals
 >>> print(data[0:3])
+[CrsDataPoint(Montgomery_Alabama, epsg=4326, x=-86.279118, y=32.361538), CrsDataPoint(Juneau_Alaska, epsg=4326, x=-134.41974, y=58.301935), CrsDataPoint(Phoenix_Arizona, epsg=4326, x=-112.073844, y=33.448457)]
 ```
 We can check at anypoint the complete list of all instantiated objects with by using the `CrsDataPoint.all` attribute.
 
@@ -190,34 +191,34 @@ Calling the `extract_multiple_bioclim_elev(specimens_list, dataset, trimmed=True
 
 # Extract bioclim values for all states
 >>> df_trimmed = extract_multiple_bioclim_elev(data, 'worldclim', trimmed=True) # if False : full df
-Extracting values for Alaska at lon=-154.493 lat=63.589  for all climate variables bio1 to bio19  + elevation in WorldClim 2.1 (1970-2000) dataset...
+>>> df_trimmed = df_trimmed.set_index('id')
+Extracting values for Montgomery_Alabama at lon=-86.279 lat=32.362  for all climate variables bio1 to bio19  + elevation in WorldClim 2.1 (1970-2000) dataset...
 Done!
-Extracting values for Alabama at lon=-86.902 lat=32.318  for all climate variables bio1 to bio19  + elevation in WorldClim 2.1 (1970-2000) dataset...
+Extracting values for Juneau_Alaska at lon=-134.420 lat=58.302  for all climate variables bio1 to bio19  + elevation in WorldClim 2.1 (1970-2000) dataset...
 Done!
 ...
-Extracting values for Wyoming at lon=-107.290 lat=43.076  for all climate variables bio1 to bio19  + elevation in WorldClim 2.1 (1970-2000) dataset...
+Extracting values for Cheyenne_Wyoming at lon=-104.802 lat=41.146  for all climate variables bio1 to bio19  + elevation in WorldClim 2.1 (1970-2000) dataset...
 Done!
 
-# Checking the first five states
+# Checking the first five capitals
 >>> print(df_trimmed.head())
-           id  epsg         lon  ...  bio18 (kg / m**2 / month)  bio19 (kg / m**2 / month)  elevation_Meters
-0      Alaska  4326 -154.493062  ...                      208.0                       54.0               366
-1     Alabama  4326  -86.902298  ...                      319.0                      392.0                57
-2    Arkansas  4326  -91.831833  ...                      276.0                      306.0               136
-3     Arizona  4326 -111.093731  ...                      203.0                      166.0              1587
-4  California  4326 -119.417932  ...                        5.0                      195.0               149
+                       epsg         lon        lat  bio1 (Celcius)  ...  bio17 (kg / m**2 / month)  bio18 (kg / m**2 / month)  bio19 (kg / m**2 / month)  elevation_Meters
+id                                                                  ...                                                                                                   
+Montgomery_Alabama     4326  -86.279118  32.361538       18.850000  ...                      264.0                      330.0                      392.0                88
+Juneau_Alaska          4326 -134.419740  58.301935        5.045834  ...                      306.0                      409.0                      463.0                45
+Phoenix_Arizona        4326 -112.073844  33.448457       22.787500  ...                       13.0                       53.0                       59.0               336
+Little Rock_Arkansas   4326  -92.331122  34.736009       16.950001  ...                      270.0                      275.0                      301.0               104
+Sacramento_California  4326 -121.468926  38.555605       16.587500  ...                        9.0                        9.0                      249.0                 9
 
-[5 rows x 24 columns]
+[5 rows x 23 columns]
 ```
 
 **Then save to csv**
 ```python
->>> bioclim_out = data_dir / "states_bioclim.csv"
+>>> bioclim_out = data_dir / "us-capitals_bioclim.csv"
 >>> if not Path.is_file(bioclim_out):
 >>>     df_trimmed.to_csv(bioclim_out)
 ```
 
-
-
 ## Contact
-Feel free to contact me for any questions of feedback!
+Feel free to contact me by [email](simlalonde@hotmail.com) or any other platform mentioned in my GitHub profile for any questions of feedback!
