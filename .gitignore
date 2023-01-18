@@ -1,4 +1,5 @@
 data/urls/test.txt
+data/us-state-capitals.json
 scripts/test.ipynb
 test.py
 *.tif
