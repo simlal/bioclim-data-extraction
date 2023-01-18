@@ -2,6 +2,8 @@
 
 ## About the project
 This is a small python program that allows easy and fast extraction of [Bioclimatic variables](https://www.worldclim.org/data/bioclim.html) (commonly used in ecological analyses and modeling) from 2 of the most prohiminent climate datasets, [Chelsa](https://chelsa-climate.org) and [WorldClim](https://www.worldclim.org/). To extract the data, you only need the lon/lat (x,y) coordinates using any of the Coordinate Reference System in combination with the download GeoTIFF files. The program will take care of offset + scale correction and will output the data in the proper units for each variable.
+
+Included also is a quick way to visualize with the Plotly library via running [data_viz.py](/scripts/data_viz.py) script that can improved and customized.
 ## Databases
 ### WorldClim Bioclimatic variables (latest version 2.1)
 
@@ -220,5 +222,18 @@ Sacramento_California  4326 -121.468926  38.555605       16.587500  ...         
 >>>     df_trimmed.to_csv(bioclim_out)
 ```
 
+## Data visualization
+
+All visualization are made with the [Plotly graphing library for Python](https://plotly.com/python/). Run the [data_viz.py](/scripts/data_viz.py) script from the main folder as `python data_viz.py`. You need to customize the vars name according to your id's in your input `file.csv`.
+
+### Mapbox
+Example with scatterplot on Mapbox
+![mapbox](/viz_example/mapbox_example.png)
+
+### Dotplot for bioclim + elev
+Example with bio1 selection from dropdown menu
+![bio1](/viz_example/bio1_scatter_example.png)
+Example with elevation selection from dropdown menu
+![elev](/viz_example/elev_scatter_example.png)
 ## Contact
 Feel free to contact me by [email](simlalonde@hotmail.com) or any other platform mentioned in my GitHub profile for any questions of feedback!
