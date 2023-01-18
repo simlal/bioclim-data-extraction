@@ -1,5 +1,7 @@
 # Bioclimatic variables data extraction at high resolution
 
+## About the project
+This is a small python program that allows easy and fast extraction of [Bioclimatic variables](https://www.worldclim.org/data/bioclim.html) (commonly used in ecological analyses and modeling) from 2 of the most prohiminent climate datasets, [Chelsa](https://chelsa-climate.org) and [WorldClim](https://www.worldclim.org/). To extract the data, you only need the lon/lat (x,y) coordinates using any of the Coordinate Reference System in combination with the download GeoTIFF files. The program will take care of offset + scale correction and will output the data in the proper units for each variable.
 ## Databases
 ### WorldClim Bioclimatic variables (latest version 2.1)
 
