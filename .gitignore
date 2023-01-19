@@ -1,10 +1,12 @@
 data/urls/test.txt
 data/us-state-capitals.json
 data/us-capitals_bioclim.csv
+data/us-capitals_bioclim_wc.csv
+data/us-capitals_bioclim_chelsa.csv
+data/cities.csv
 scripts/test.ipynb
-test.py
 *.tif
 *.zip
 scripts/__pycache__
-data/cities.csv
 run.py
+test.py
