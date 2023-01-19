@@ -30,7 +30,7 @@ if __name__ == "__main__":
                             )
         fig.update_layout(mapbox_style="stamen-terrain")
         fig.update_layout(margin={"r":0,"t":40,"l":0,"b":0})
-        # fig.update_layout(mapbox_bounds={"west": -180, "east": -50, "south": 20, "north": 90})
+        # fig.update_layout(mapbox_bounds={"west": -180, "east": -50, "south": 20, "north": 90}) #! IN THE DOCS BUT RAISE ERROR
         fig.show()
 
         # 2nd viz : Create scatter plot with categorical data (capitals) for each bioclim + elev vars
