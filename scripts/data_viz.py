@@ -28,7 +28,7 @@ if __name__ == "__main__":
                                 hover_name="id", color="elevation_Meters", hover_data=bioclim_elev_fields,
                                 zoom=3, height=600, title="Bioclim and elevation map for US Capitals"
                             )
-        fig.update_layout(mapbox_style="stamen-terrain")
+        fig.update_layout(mapbox_style="open-street-map")
         fig.update_layout(margin={"r":0,"t":40,"l":0,"b":0})
         # fig.update_layout(mapbox_bounds={"west": -180, "east": -50, "south": 20, "north": 90}) #! IN THE DOCS BUT RAISE ERROR
         fig.show()
