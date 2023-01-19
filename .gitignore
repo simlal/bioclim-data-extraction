@@ -7,3 +7,4 @@ test.py
 *.zip
 scripts/__pycache__
 data/cities.csv
+run.py
