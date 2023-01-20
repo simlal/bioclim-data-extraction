@@ -224,8 +224,11 @@ Sacramento_California  4326 -121.468926  38.555605       16.587500  ...         
 
 ## Data visualization
 
-All visualization are made with the [Plotly graphing library for Python](https://plotly.com/python/). Run the [data_viz.py](/scripts/data_viz.py) script from the main folder as `python data_viz.py`. You need to customize the vars name according to your id's in your input `file.csv`.
+All visualization are made with the [Plotly graphing library for Python](https://plotly.com/python/). Run the [data_viz.py](/scripts/data_viz.py) script command line with the previously generated csv as follow :
 
+ `python data_viz.py us-capitals_bioclim.csv`. 
+ 
+ The [data_viz.py](/scripts/data_viz.py) was written quickly to just have a visualization of the climate data pipeline. 
 ### Mapbox
 Example with scatterplot on Mapbox
 ![mapbox](/viz_example/mapbox_example.png)
